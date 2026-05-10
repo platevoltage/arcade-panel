@@ -48,6 +48,9 @@ int bTarget[NUM_BUTTONS];
 Adafruit_TLC5947 tlc =
     Adafruit_TLC5947(NUM_TLC5947, BUTTON_LIGHTS_CLOCK_PIN,
                      BUTTON_LIGHTS_DATA_PIN, BUTTON_LIGHTS_LATCH_PIN);
+
+CRGB leds[24];
+
 bool tlcStarted = false;
 
 void Delay(int x) { vTaskDelay(pdMS_TO_TICKS(x)); }
@@ -104,10 +107,7 @@ void writeTask(void *pvParameters) {
     // Delay(10);
   }
 }
-//{"button1":"110000","button2":"110000","button3":"110000","button4":"110000","button5":"FF0000","button6":"00FF00","button7":"110000","button8":"110000","button9":"111111","button10":"111111","button11":"000011","button12":"000011","button13":"000011","button14":"000011","button15":"FF0000","button16":"00FF00","button17":"000011","button18":"000011","button19":"111111","button20":"111111"}
 
-//{"buttons" : ["110000", "110000", "110000", "110000", "110000",
-//"110000","110000", "110000", "110000", "110000"]}
 void go(TimerHandle_t xTimer) {
   // void go(TimerHandle_t xTimer) {
   if (!tlcStarted) {
@@ -115,19 +115,13 @@ void go(TimerHandle_t xTimer) {
     tlcStarted = true;
   }
   JsonDocument doc;
-  // Only try to parse if we actually got something
 
   DeserializationError error = deserializeJson(doc, jsonString);
-  // Serial.println(uxTaskGetStackHighWaterMark(NULL));
-  // Serial.println(jsonString);
+
   if (error) {
     Serial.println("JSON parse error");
-    return; // Don't return or break the task
+    return;
   }
-
-  // Serial.println(jsonString);
-  // Serial.println((String)doc["buttons"]);
-  // Serial.println(doc["buttons"].size());
 
   uint8_t numButtons = doc["buttons"].size();
 
@@ -138,7 +132,6 @@ void go(TimerHandle_t xTimer) {
 
       if (i >= numButtons) {
         int _i = numButtons - NUM_BUTTONS + i;
-        // Serial.println(_i);
         hex = doc["buttons"][_i];
       }
 
@@ -160,29 +153,20 @@ void go(TimerHandle_t xTimer) {
         rTarget[i] = (r8 * 4095 + 127) / 255;
         gTarget[i] = (g8 * 4095 + 127) / 255;
         bTarget[i] = (b8 * 4095 + 127) / 255;
-        // String hexStr(hex);
-        // int r8 = strtol(hexStr.substring(0, 2).c_str(), nullptr, 16);
-        // int g8 = strtol(hexStr.substring(2, 4).c_str(), nullptr, 16);
-        // int b8 = strtol(hexStr.substring(4, 6).c_str(), nullptr, 16);
 
-        // rTarget[i] = (r8 * 4095 + 127) / 255;
-        // gTarget[i] = (g8 * 4095 + 127) / 255;
-        // bTarget[i] = (b8 * 4095 + 127) / 255;
+        // uint8_t r = (hex >> 16) & 0xFF;
+        // uint8_t g = (hex >> 8) & 0xFF;
+        // uint8_t b = hex & 0xFF;
+
       } else {
         rTarget[i] = gTarget[i] = bTarget[i] = 0;
       }
-      // Serial.println("SETTING");
-      // Serial.println(rTarget[i]);
-      // Serial.println(gTarget[i]);
-      // Serial.println(bTarget[i]);
+
       tlc.setLED(buttons[i], rTarget[i], gTarget[i], bTarget[i]);
     }
-    // Serial.println("PRINTING");
-    // Serial.println(ESP.getFreeHeap());
-    // tlc.setLED(0, 250, 0, 0);
     tlc.write();
-  } else {
-    Serial.println("Invalid Json");
+  }
+  if (doc["sticks"]) {
   }
 }
 

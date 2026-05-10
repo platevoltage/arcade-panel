@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["gamepad", "Gamepad", "USBHID"],
+  "cSpell.words": ["CRGB", "gamepad", "Gamepad", "USBHID"],
   "files.associations": {
     "*.embeddedhtml": "html",
     "*.inc": "cpp",

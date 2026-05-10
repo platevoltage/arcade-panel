@@ -24,6 +24,8 @@
 #define BUTTON_LIGHTS_CLOCK_PIN 18
 #define BUTTON_LIGHTS_LATCH_PIN 35
 
-#define AVAILABLE_PIN_1 13
+#define RING_DATA_PIN 13
+
+// #define AVAILABLE_PIN_1 13
 #define AVAILABLE_PIN_2 14
 #define AVAILABLE_PIN_3 15 // no pigtail
