@@ -1,7 +1,8 @@
-#include "USB.h"
-#include "USBHIDKeyboard.h"
+#include "lights.h"
 #include "pins.h"
 #include <Arduino.h>
+
+USBCDC USBSerial;
 
 USBHIDKeyboard Keyboard;
 bool pauseProbing = false;
@@ -14,7 +15,7 @@ bool pauseProbing = false;
 #define _KEY_5_P1 's'
 #define _KEY_6_P1 '1'
 #define _KEY_7_P1 '2'
-#define _KEY_8_P1 KEY_SPACE
+#define _KEY_8_P1 ' '
 #define _KEY_9_P1 KEY_RETURN
 
 #define _KEY_0_P2 't'
@@ -43,20 +44,33 @@ const uint8_t keys[NUM_BUTTONS] = {
     _KEY_4_P2, _KEY_5_P2, _KEY_6_P2, _KEY_7_P2, _KEY_8_P2, _KEY_9_P2,
 };
 
-void probeButton(uint8_t buttonPin, uint8_t buttonNumber) {
+bool probeButton(uint8_t buttonPin, uint8_t buttonNumber) {
   if (!digitalRead(buttonPin)) {
+    USBSerial.print(buttonNumber);
     Keyboard.press(keys[buttonNumber]);
+    return true;
   } else {
     Keyboard.release(keys[buttonNumber]);
+    return false;
   }
 }
 
 void keyboardTask(void *pvParameters) {
   while (1) {
+    bool buttonPushed = false;
     if (!pauseProbing) {
       for (int i = 0; i < NUM_BUTTONS; i++) {
-        probeButton(buttonPins[i], i);
+        if (probeButton(buttonPins[i], i)) {
+          buttonPushed = true;
+        }
       }
+    }
+    if (buttonPushed) {
+      onboardLed[0] = CRGB::Blue;
+      FastLED.show();
+    } else {
+      onboardLed[0] = CRGB::Black;
+      FastLED.show();
     }
     vTaskDelay(1);
   }

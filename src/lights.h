@@ -41,78 +41,26 @@ uint8_t buttons[NUM_BUTTONS] = {
 };
 
 String jsonString = "";
-int r[NUM_BUTTONS], g[NUM_BUTTONS], b[NUM_BUTTONS];
-int rTarget[NUM_BUTTONS];
-int gTarget[NUM_BUTTONS];
-int bTarget[NUM_BUTTONS];
-Adafruit_TLC5947 tlc =
+
+int r[NUM_BUTTONS];
+int g[NUM_BUTTONS];
+int b[NUM_BUTTONS];
+Adafruit_TLC5947 buttonLights =
     Adafruit_TLC5947(NUM_TLC5947, BUTTON_LIGHTS_CLOCK_PIN,
                      BUTTON_LIGHTS_DATA_PIN, BUTTON_LIGHTS_LATCH_PIN);
 
 CRGB leds[24];
+CRGB onboardLed[1];
 
-bool tlcStarted = false;
+bool buttonLightsStarted = false;
 
 void Delay(int x) { vTaskDelay(pdMS_TO_TICKS(x)); }
 
-void writeTask(void *pvParameters) {
-  tlc.begin();
+void go() {
 
-  while (1) {
-
-    for (int i = 0; i < NUM_BUTTONS; i++) {
-      r[i] = rTarget[i];
-      g[i] = gTarget[i];
-      b[i] = bTarget[i];
-      float rGap = rTarget[i] - r[i];
-      int ratio = abs(round(rGap * .1)) + 10;
-      if (rGap >= ratio) {
-        r[i] += ratio;
-        // Serial.println(r[i]);
-      } else if (rGap <= -ratio) {
-        r[i] -= ratio;
-        // Serial.println(r[i]);
-      } else {
-        r[i] = rTarget[i];
-      }
-
-      float gGap = gTarget[i] - g[i];
-      ratio = abs(round(gGap * .1)) + 10;
-      if (gGap >= ratio) {
-        g[i] += ratio;
-        // Serial.println(g[i]);
-      } else if (gGap <= -ratio) {
-        g[i] -= ratio;
-        // Serial.println(g[i]);
-      } else {
-        g[i] = gTarget[i];
-      }
-
-      float bGap = bTarget[i] - b[i];
-      ratio = abs(round(bGap * .1)) + 10;
-      if (bGap >= ratio) {
-        b[i] += ratio;
-        // Serial.println(b[i]);
-      } else if (bGap <= -ratio) {
-        b[i] -= ratio;
-        // Serial.println(b[i]);
-      } else {
-        b[i] = bTarget[i];
-      }
-
-      tlc.setLED(buttons[i], r[i], g[i], b[i]);
-      // tlc.setLED(i >= 8 ? i + 4 : i + 16, r[i], g[i], b[i]);
-    }
-    tlc.write();
-    // Delay(10);
-  }
-}
-
-void go(TimerHandle_t xTimer) {
-  // void go(TimerHandle_t xTimer) {
-  if (!tlcStarted) {
-    tlc.begin();
-    tlcStarted = true;
+  if (!buttonLightsStarted) {
+    buttonLights.begin();
+    buttonLightsStarted = true;
   }
   JsonDocument doc;
 
@@ -150,44 +98,22 @@ void go(TimerHandle_t xTimer) {
         buf[1] = hex[5];
         int b8 = strtol(buf, nullptr, 16);
 
-        rTarget[i] = (r8 * 4095 + 127) / 255;
-        gTarget[i] = (g8 * 4095 + 127) / 255;
-        bTarget[i] = (b8 * 4095 + 127) / 255;
+        r[i] = (r8 * 4095 + 127) / 255;
+        g[i] = (g8 * 4095 + 127) / 255;
+        b[i] = (b8 * 4095 + 127) / 255;
 
         // uint8_t r = (hex >> 16) & 0xFF;
         // uint8_t g = (hex >> 8) & 0xFF;
         // uint8_t b = hex & 0xFF;
 
       } else {
-        rTarget[i] = gTarget[i] = bTarget[i] = 0;
+        r[i] = g[i] = b[i] = 0;
       }
 
-      tlc.setLED(buttons[i], rTarget[i], gTarget[i], bTarget[i]);
+      buttonLights.setLED(buttons[i], r[i], g[i], b[i]);
     }
-    tlc.write();
+    buttonLights.write();
   }
   if (doc["sticks"]) {
   }
 }
-
-// void lightsTask(void *pvParameters) {
-//   // StaticJsonDocument<512> doc;
-//   Serial.setTimeout(10); // Don't block for long
-//   go(NULL);
-//   while (1) {
-//     if (Serial.available()) {
-//       jsonString = Serial.readStringUntil('\n');
-//       Serial.println(jsonString);
-
-//       for (int i = 0; i < NUM_BUTTONS; i++) {
-//         rTarget[i] = gTarget[i] = bTarget[i] = 0;
-//       }
-
-//       TimerHandle_t timeout =
-//           xTimerCreate("Timeout", pdMS_TO_TICKS(400), pdFALSE, NULL, go);
-//       xTimerStart(timeout, 0);
-//     }
-
-//     vTaskDelay(1); // Yield to FreeRTOS scheduler
-//   }
-// }

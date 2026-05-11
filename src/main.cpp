@@ -1,16 +1,19 @@
-// #include "gamepad.h"
-#include "keyboard.h"
-#include "lights.h"
+
 #include <Arduino.h>
 
-char jsonBuffer[512];
-void lightsTask(void *pvParameters) {
+#include "USB.h"
+#include "USBHIDKeyboard.h"
+#include "keyboard.h"
 
-  Serial.setTimeout(10);
+char jsonBuffer[512];
+void lightsTask() {
+
+  USBSerial.setTimeout(10);
 
   while (1) {
 
-    int len = Serial.readBytesUntil('\n', jsonBuffer, sizeof(jsonBuffer) - 1);
+    int len =
+        USBSerial.readBytesUntil('\n', jsonBuffer, sizeof(jsonBuffer) - 1);
 
     if (len > 0) {
 
@@ -19,10 +22,10 @@ void lightsTask(void *pvParameters) {
       if (jsonBuffer[0] == '{') {
         // parse later
         for (int i = 0; i < NUM_BUTTONS; i++) {
-          rTarget[i] = gTarget[i] = bTarget[i] = 0;
+          r[i] = g[i] = b[i] = 0;
         }
         jsonString = String(jsonBuffer);
-        go(NULL);
+        go();
       } else {
         typeKey(jsonBuffer[0], KEY_LEFT_SHIFT);
       }
@@ -33,25 +36,25 @@ void lightsTask(void *pvParameters) {
 }
 
 void setup() {
-  Serial.begin(115200);
+  USBSerial.begin(115200);
   // Serial.setTxTimeoutMs(0);
-  tlc.begin();
+  buttonLights.begin();
   FastLED.addLeds<NEOPIXEL, RING_DATA_PIN>(leds, 24);
-
+  FastLED.addLeds<NEOPIXEL, ONBOARD_RGB_DATA_PIN>(onboardLed, 1);
+  USBSerial.print("IM ALIVE");
   for (int i = 0; i < NUM_BUTTONS; i++) {
+    USBSerial.print(buttonPins[i]);
+    USBSerial.print(" / ");
     pinMode(buttonPins[i], INPUT_PULLUP);
-    tlc.setLED(i, 0, 0, 0);
+    buttonLights.setLED(i, 0, 0, 0);
   }
-  tlc.write();
-  // pinMode(L2_PIN, INPUT_PULLUP);
-  // pinMode(R2_PIN, INPUT_PULLUP);
+  buttonLights.write();
 
-  Keyboard.begin();
+  // delay(2000);
   USB.begin();
-  // Gamepad.begin();
-  // Keyboard.begin();
-  // USB.begin();
+  Keyboard.begin();
 
+  delay(10000);
   xTaskCreatePinnedToCore(keyboardTask,   // Function to run
                           "keyboardTask", // Name
                           4096,           // Stack size
@@ -61,13 +64,4 @@ void setup() {
                           0);
 }
 
-void loop() {
-  lightsTask(NULL);
-  // gamepadTask();
-  // keyboardTask();
-
-  // Serial.printf("Free heap: %d\n", ESP.getFrew2eHeap());
-  // Serial.printf("Minimum free heap: %d\n", ESP.getMinFreeHeap());
-  // Serial.printf("Maximum allocatable block: %d\n",
-  //               heap_caps_get_largest_free_block(MALLOC_CAP_DEFAULT));
-}
+void loop() { lightsTask(); }

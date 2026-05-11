@@ -1,3 +1,5 @@
+// DO NOT USE 39 or 40!!! THEY WILL BREAK USB
+
 #define BUTTON_PIN_0_P1 14 // B // bottom row left to right
 #define BUTTON_PIN_1_P1 12 // A
 #define BUTTON_PIN_2_P1 10 // L1
@@ -6,8 +8,8 @@
 #define BUTTON_PIN_5_P1 11 // X
 #define BUTTON_PIN_6_P1 9  // L2
 #define BUTTON_PIN_7_P1 3  // L3
-#define BUTTON_PIN_8_P1 20 // select
-#define BUTTON_PIN_9_P1 19 // start
+#define BUTTON_PIN_8_P1 21 // select
+#define BUTTON_PIN_9_P1 47 // start
 
 #define BUTTON_PIN_0_P2 8 // bottom row left to right
 #define BUTTON_PIN_1_P2 17
@@ -26,4 +28,4 @@
 
 #define RING_DATA_PIN 39
 
-#define ONBOARD_RGB_DATA_PIN 38
+#define ONBOARD_RGB_DATA_PIN 48
