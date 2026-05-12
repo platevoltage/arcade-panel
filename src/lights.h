@@ -76,36 +76,6 @@ void go() {
   if (doc["buttons"]) {
     for (uint8_t i = 0; i < NUM_BUTTONS; i++) {
 
-      // const char *hex = doc["buttons"][i];
-
-      // if (i >= numButtons) {
-      //   int _i = numButtons - NUM_BUTTONS + i;
-      //   hex = doc["buttons"][_i];
-      // }
-
-      // if (hex && strlen(hex) >= 6) {
-      //   char buf[3] = {0};
-
-      //   buf[0] = hex[0];
-      //   buf[1] = hex[1];
-      //   int r8 = strtol(buf, nullptr, 16);
-
-      //   buf[0] = hex[2];
-      //   buf[1] = hex[3];
-      //   int g8 = strtol(buf, nullptr, 16);
-
-      //   buf[0] = hex[4];
-      //   buf[1] = hex[5];
-      //   int b8 = strtol(buf, nullptr, 16);
-
-      //   r[i] = (r8 * 4095 + 127) / 255;
-      //   g[i] = (g8 * 4095 + 127) / 255;
-      //   b[i] = (b8 * 4095 + 127) / 255;
-
-      // } else {
-      //   r[i] = g[i] = b[i] = 0;
-      // }
-
       int color = doc["buttons"][i];
 
       if (i >= numButtons) {
