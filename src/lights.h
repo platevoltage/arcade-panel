@@ -75,41 +75,68 @@ void go() {
 
   if (doc["buttons"]) {
     for (uint8_t i = 0; i < NUM_BUTTONS; i++) {
-      // String key = "button" + String(i + 1);
-      const char *hex = doc["buttons"][i];
+
+      // const char *hex = doc["buttons"][i];
+
+      // if (i >= numButtons) {
+      //   int _i = numButtons - NUM_BUTTONS + i;
+      //   hex = doc["buttons"][_i];
+      // }
+
+      // if (hex && strlen(hex) >= 6) {
+      //   char buf[3] = {0};
+
+      //   buf[0] = hex[0];
+      //   buf[1] = hex[1];
+      //   int r8 = strtol(buf, nullptr, 16);
+
+      //   buf[0] = hex[2];
+      //   buf[1] = hex[3];
+      //   int g8 = strtol(buf, nullptr, 16);
+
+      //   buf[0] = hex[4];
+      //   buf[1] = hex[5];
+      //   int b8 = strtol(buf, nullptr, 16);
+
+      //   r[i] = (r8 * 4095 + 127) / 255;
+      //   g[i] = (g8 * 4095 + 127) / 255;
+      //   b[i] = (b8 * 4095 + 127) / 255;
+
+      // } else {
+      //   r[i] = g[i] = b[i] = 0;
+      // }
+
+      int color = doc["buttons"][i];
 
       if (i >= numButtons) {
         int _i = numButtons - NUM_BUTTONS + i;
-        hex = doc["buttons"][_i];
+        color = doc["buttons"][_i];
       }
 
-      if (hex && strlen(hex) >= 6) {
-        char buf[3] = {0};
+      r[i] = (color >> 16) & 0xFF;
+      g[i] = (color >> 8) & 0xFF;
+      b[i] = color & 0xFF;
 
-        buf[0] = hex[0];
-        buf[1] = hex[1];
-        int r8 = strtol(buf, nullptr, 16);
+      // Serial.print(i);
+      // Serial.print(") ");
+      // Serial.print(color);
+      // Serial.print(" / ");
+      // Serial.print(r[i]);
+      // Serial.print(" ");
+      // Serial.print(g[i]);
+      // Serial.print(" ");
+      // Serial.print(b[i]);
+      // Serial.print(" / ");
+      // Serial.print(r[i], HEX);
+      // Serial.print(" ");
+      // Serial.print(g[i], HEX);
+      // Serial.print(" ");
+      // Serial.print(b[i], HEX);
+      // Serial.println(" ");
 
-        buf[0] = hex[2];
-        buf[1] = hex[3];
-        int g8 = strtol(buf, nullptr, 16);
-
-        buf[0] = hex[4];
-        buf[1] = hex[5];
-        int b8 = strtol(buf, nullptr, 16);
-
-        r[i] = (r8 * 4095 + 127) / 255;
-        g[i] = (g8 * 4095 + 127) / 255;
-        b[i] = (b8 * 4095 + 127) / 255;
-
-        // uint8_t r = (hex >> 16) & 0xFF;
-        // uint8_t g = (hex >> 8) & 0xFF;
-        // uint8_t b = hex & 0xFF;
-
-      } else {
-        r[i] = g[i] = b[i] = 0;
-      }
-
+      r[i] = map(r[i], 0, 255, 0, 4095);
+      g[i] = map(g[i], 0, 255, 0, 4095);
+      b[i] = map(b[i], 0, 255, 0, 4095);
       buttonLights.setLED(buttons[i], r[i], g[i], b[i]);
     }
     buttonLights.write();

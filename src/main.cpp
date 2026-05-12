@@ -36,8 +36,10 @@ void lightsTask() {
 }
 
 void setup() {
+  USB.productName("ARCADE THING");
   USBSerial.begin(115200);
-  // Serial.setTxTimeoutMs(0);
+  USBSerial.setTxTimeoutMs(0);
+  Serial.begin(115200);
   buttonLights.begin();
   FastLED.addLeds<NEOPIXEL, RING_DATA_PIN>(leds, 24);
   FastLED.addLeds<NEOPIXEL, ONBOARD_RGB_DATA_PIN>(onboardLed, 1);
