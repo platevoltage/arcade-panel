@@ -42,9 +42,9 @@ uint8_t buttons[NUM_BUTTONS] = {
 
 String jsonString = "";
 
-int r[NUM_BUTTONS];
-int g[NUM_BUTTONS];
-int b[NUM_BUTTONS];
+uint16_t r[NUM_BUTTONS];
+uint16_t g[NUM_BUTTONS];
+uint16_t b[NUM_BUTTONS];
 Adafruit_TLC5947 buttonLights =
     Adafruit_TLC5947(NUM_TLC5947, BUTTON_LIGHTS_CLOCK_PIN,
                      BUTTON_LIGHTS_DATA_PIN, BUTTON_LIGHTS_LATCH_PIN);
@@ -76,38 +76,44 @@ void go() {
   if (doc["buttons"]) {
     for (uint8_t i = 0; i < NUM_BUTTONS; i++) {
 
-      int color = doc["buttons"][i];
+      // uint64_t color = doc["buttons"][i];
+      uint16_t r = doc["buttons"][i]["r"];
+      uint16_t g = doc["buttons"][i]["g"];
+      uint16_t b = doc["buttons"][i]["b"];
 
       if (i >= numButtons) {
         int _i = numButtons - NUM_BUTTONS + i;
-        color = doc["buttons"][_i];
+        // color = doc["buttons"][_i];
+        r = doc["buttons"][_i]["r"];
+        g = doc["buttons"][_i]["g"];
+        b = doc["buttons"][_i]["b"];
       }
 
-      r[i] = (color >> 16) & 0xFF;
-      g[i] = (color >> 8) & 0xFF;
-      b[i] = color & 0xFF;
+      // r[i] = (color >> 32) & 0xFFFF;
+      // g[i] = (color >> 16) & 0xFFFF;
+      // b[i] = color & 0xFFFF;
 
-      // Serial.print(i);
-      // Serial.print(") ");
+      Serial.print(i);
+      Serial.print(") ");
       // Serial.print(color);
       // Serial.print(" / ");
-      // Serial.print(r[i]);
-      // Serial.print(" ");
-      // Serial.print(g[i]);
-      // Serial.print(" ");
-      // Serial.print(b[i]);
-      // Serial.print(" / ");
-      // Serial.print(r[i], HEX);
-      // Serial.print(" ");
-      // Serial.print(g[i], HEX);
-      // Serial.print(" ");
-      // Serial.print(b[i], HEX);
-      // Serial.println(" ");
+      Serial.print(r);
+      Serial.print(" ");
+      Serial.print(g);
+      Serial.print(" ");
+      Serial.print(b);
+      Serial.print(" / ");
+      Serial.print(r, HEX);
+      Serial.print(" ");
+      Serial.print(g, HEX);
+      Serial.print(" ");
+      Serial.print(b, HEX);
+      Serial.println(" ");
 
-      r[i] = map(r[i], 0, 255, 0, 4095);
-      g[i] = map(g[i], 0, 255, 0, 4095);
-      b[i] = map(b[i], 0, 255, 0, 4095);
-      buttonLights.setLED(buttons[i], r[i], g[i], b[i]);
+      // r[i] = map(r[i], 0, 255, 0, 4095);
+      // g[i] = map(g[i], 0, 255, 0, 4095);
+      // b[i] = map(b[i], 0, 255, 0, 4095);
+      buttonLights.setLED(buttons[i], r, g, b);
     }
     buttonLights.write();
   }

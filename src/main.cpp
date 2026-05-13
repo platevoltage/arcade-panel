@@ -5,7 +5,7 @@
 #include "USBHIDKeyboard.h"
 #include "keyboard.h"
 
-char jsonBuffer[512];
+char jsonBuffer[2048];
 void lightsTask() {
 
   USBSerial.setTimeout(10);
@@ -39,6 +39,7 @@ void setup() {
   USB.productName("ARCADE THING");
   USBSerial.begin(115200);
   USBSerial.setTxTimeoutMs(0);
+  USBSerial.setRxBufferSize(0xFFFF);
   Serial.begin(115200);
   buttonLights.begin();
   FastLED.addLeds<NEOPIXEL, RING_DATA_PIN>(leds, 24);
