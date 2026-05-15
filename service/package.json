@@ -1,0 +1,30 @@
+{
+  "name": "stream-deck",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "start": "node index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@elgato-stream-deck/node": "^7.3.2",
+    "@elgato-stream-deck/webhid": "^7.3.2",
+    "cors": "^2.8.5",
+    "crc": "^4.3.2",
+    "express": "^5.1.0",
+    "express-cors": "^0.0.3",
+    "gif-frames": "^1.0.1",
+    "gifwrap": "^0.10.1",
+    "serialport": "^13.0.0",
+    "sharp": "^0.34.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.1.0"
+  }
+}
