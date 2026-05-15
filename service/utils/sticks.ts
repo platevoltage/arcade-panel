@@ -66,3 +66,23 @@ export function start() {
 
     readNext();
 }
+
+export function calculateRingColors() {
+    const ringColors = [];
+    for (let i = 0; i < 24; i++) {
+        if (state?.led === i) {
+            ringColors.push({
+                r: 100,
+                g: 50,
+                b: i * 3
+            })
+        } else {
+            ringColors.push({
+                r: 0,
+                g: 0,
+                b: 0
+            })
+        }
+    }
+    return ringColors;
+}

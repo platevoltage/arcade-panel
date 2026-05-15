@@ -80,25 +80,25 @@ export async function sendButtonColors(port: SerialPort, colors: string[]) {
             forward = true;
             // await delay(1000);
         }
-        const stickCoords = sticks.state;
-        console.log(stickCoords);
-        const ringColors = [];
-        for (let i = 0; i < 24; i++) {
-            if (stickCoords?.led === i) {
-                ringColors.push({
-                    r: 100,
-                    g: 50,
-                    b: i * 3
-                })
-            } else {
-                ringColors.push({
-                    r: 0,
-                    g: 0,
-                    b: 0
-                })
-            }
-        }
-        const json = { "buttons": finalColorsInt.map(c => scaleBrightness(c, 1 * (1 - count * .013))), "sticks": ringColors };
+        // const stickCoords = sticks.state;
+        // console.log(stickCoords);
+        // const ringColors = [];
+        // for (let i = 0; i < 24; i++) {
+        //     if (stickCoords?.led === i) {
+        //         ringColors.push({
+        //             r: 100,
+        //             g: 50,
+        //             b: i * 3
+        //         })
+        //     } else {
+        //         ringColors.push({
+        //             r: 0,
+        //             g: 0,
+        //             b: 0
+        //         })
+        //     }
+        // }
+        const json = { "buttons": finalColorsInt.map(c => scaleBrightness(c, 1 * (1 - count * .013))), "sticks": sticks.calculateRingColors() };
         // console.log(json);
         port.write(JSON.stringify(json));
         await delay(50);
