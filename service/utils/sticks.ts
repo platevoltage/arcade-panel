@@ -5,7 +5,7 @@ const fd = fs.openSync("/dev/input/js0", "r");
 const buffer = Buffer.alloc(8);
 
 
-export let state: { x: number, y: number, angle?: number, led?: number, ledNext?: number, ledPrev?: number } = {
+export let state: { x: number, y: number, angle?: number, led?: number, ledNext?: number, ledPrev?: number, travel?: number } = {
     x: 0,
     y: 0,
     angle: 0,
@@ -53,7 +53,7 @@ export function start() {
                 const value = buffer.readInt16LE(4);
                 const type = buffer.readUInt8(6);
                 const number = buffer.readUInt8(7);
-                console.log(number, value, type);
+                // console.log(number, value, type);
                 const JS_EVENT_AXIS = 0x02;
 
                 if (type & JS_EVENT_AXIS) {
@@ -65,7 +65,9 @@ export function start() {
                     state.ledNext = state.led || state.led === 0 ? (state.led + 1) % 24 : undefined;
                     state.ledPrev = state.led || state.led === 0 ? (state.led - 1 + 24) % 24 : undefined;
 
-                    // console.log(state);
+                    // console.log({ x: state.x, y: state.y });
+                    state.travel = scaleInt16to8(Math.abs(state.x) + Math.abs(state.y))
+                    console.log(state.travel);
                 }
             }
 
@@ -76,17 +78,21 @@ export function start() {
     readNext();
 }
 
+function scaleInt16to8(value: number) {
+    return ((value) * 255 / 65534) | 0;
+}
+
 export function calculateRingColors() {
     const ringColors = new Array(24).fill({
         r: 0,
         g: 0,
-        b: 10
+        b: 1
     });
     if (state.led || state.led === 0) {
         ringColors[state.led] = {
-            r: 0,
+            r: state.travel,
             g: 0,
-            b: 255
+            b: 0,
         }
     }
     if (state.ledNext || state.ledNext === 0) {

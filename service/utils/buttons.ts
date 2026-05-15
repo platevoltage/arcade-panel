@@ -101,15 +101,15 @@ export async function sendButtonColors(port: SerialPort, colors: string[]) {
         const json = { "buttons": finalColorsInt.map(c => scaleBrightness(c, 1 * (1 - count * .013))), "sticks": sticks.calculateRingColors() };
         // console.log(json);
         port.write(JSON.stringify(json));
-        await delay(30);
+        await delay(25);
     }
 
 }
 
 function scaleBrightness(color: number, factor: number) {
-    let r = ((color >> 16) & 0xFF) * factor * 257;
-    let g = ((color >> 8) & 0xFF) * factor * 257;
-    let b = (color & 0xFF) * factor * 257;
+    let r = ((color >> 16) & 0xFF) * factor * 10;
+    let g = ((color >> 8) & 0xFF) * factor * 10;
+    let b = (color & 0xFF) * factor * 10;
 
     return {
         r: Math.round(r),

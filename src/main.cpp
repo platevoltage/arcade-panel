@@ -25,7 +25,7 @@ void lightsTask() {
           r[i] = g[i] = b[i] = 0;
         }
         jsonString = String(jsonBuffer);
-        go();
+        // go();
       } else {
         typeKey(jsonBuffer[0], KEY_LEFT_SHIFT);
       }
@@ -70,6 +70,13 @@ void setup() {
                           NULL,           // Parameters
                           1,              // Priority
                           NULL,           // Task handle
+                          0);
+  xTaskCreatePinnedToCore(go,   // Function to run
+                          "go", // Name
+                          4096, // Stack size
+                          NULL, // Parameters
+                          1,    // Priority
+                          NULL, // Task handle
                           0);
 }
 
