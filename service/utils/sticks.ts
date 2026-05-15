@@ -1,14 +1,14 @@
 import fs from "fs";
 
+
 const fd = fs.openSync("/dev/input/js0", "r");
 const buffer = Buffer.alloc(8);
 
 
-export let state: { x: number, y: number, angle?: number, led?: number } = {
+export let state: { x: number, y: number, angle?: number, led?: number, ledNext?: number, ledPrev?: number } = {
     x: 0,
     y: 0,
     angle: 0,
-    led: 0
 };
 
 function stickToAngle(x: number, y: number) {
@@ -36,6 +36,11 @@ function angleToLed(angle?: number) {
 
 
 export function start() {
+
+    const raw = fs.readFileSync("/proc/bus/input/devices", "utf8");
+
+    console.log(raw);
+
     function readNext() {
         fs.read(fd, buffer, 0, 8, null, (err, bytesRead) => {
             if (err) {
@@ -48,7 +53,7 @@ export function start() {
                 const value = buffer.readInt16LE(4);
                 const type = buffer.readUInt8(6);
                 const number = buffer.readUInt8(7);
-
+                console.log(number, value, type);
                 const JS_EVENT_AXIS = 0x02;
 
                 if (type & JS_EVENT_AXIS) {
@@ -57,6 +62,10 @@ export function start() {
 
                     state.angle = stickToAngle(state.x, state.y);
                     state.led = angleToLed(state.angle);
+                    state.ledNext = state.led || state.led === 0 ? (state.led + 1) % 24 : undefined;
+                    state.ledPrev = state.led || state.led === 0 ? (state.led - 1 + 24) % 24 : undefined;
+
+                    // console.log(state);
                 }
             }
 
@@ -68,21 +77,33 @@ export function start() {
 }
 
 export function calculateRingColors() {
-    const ringColors = [];
-    for (let i = 0; i < 24; i++) {
-        if (state?.led === i) {
-            ringColors.push({
-                r: 100,
-                g: 50,
-                b: i * 3
-            })
-        } else {
-            ringColors.push({
-                r: 0,
-                g: 0,
-                b: 0
-            })
+    const ringColors = new Array(24).fill({
+        r: 0,
+        g: 0,
+        b: 10
+    });
+    if (state.led || state.led === 0) {
+        ringColors[state.led] = {
+            r: 0,
+            g: 0,
+            b: 255
         }
     }
+    if (state.ledNext || state.ledNext === 0) {
+        ringColors[state.ledNext] = {
+            r: 50,
+            g: 0,
+            b: 100
+        }
+    }
+    if (state.ledPrev || state.ledPrev === 0) {
+        ringColors[state.ledPrev] = {
+            r: 50,
+            g: 0,
+            b: 100
+        }
+    }
+
+
     return ringColors;
 }

@@ -5,7 +5,7 @@
 #include "USBHIDKeyboard.h"
 #include "keyboard.hpp"
 
-char jsonBuffer[2048];
+char jsonBuffer[4096];
 void lightsTask() {
 
   USBSerial.setTimeout(10);
