@@ -1,5 +1,5 @@
 
-#include "pins.h"
+#include "pins.hpp"
 #include <Adafruit_TLC5947.h>
 #include <Arduino.h>
 #include <ArduinoJson.h>

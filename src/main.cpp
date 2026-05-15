@@ -3,7 +3,7 @@
 
 #include "USB.h"
 #include "USBHIDKeyboard.h"
-#include "keyboard.h"
+#include "keyboard.hpp"
 
 char jsonBuffer[2048];
 void lightsTask() {

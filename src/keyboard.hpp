@@ -1,5 +1,5 @@
-#include "lights.h"
-#include "pins.h"
+#include "lights.hpp"
+#include "pins.hpp"
 #include <Arduino.h>
 
 USBCDC USBSerial;
