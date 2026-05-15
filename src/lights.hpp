@@ -34,6 +34,7 @@
 #define BOTTOM_4_P2 23
 
 #define FASTLED_RMT_BUILTIN_DRIVER 1
+#define FASTLED_RMT_USE_ASYNC 0
 
 uint8_t buttons[NUM_BUTTONS] = {
     TOP_1_P1,    TOP_2_P1,    TOP_3_P1,    TOP_4_P1,  BOTTOM_1_P1,

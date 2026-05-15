@@ -101,7 +101,7 @@ export async function sendButtonColors(port: SerialPort, colors: string[]) {
         const json = { "buttons": finalColorsInt.map(c => scaleBrightness(c, 1 * (1 - count * .013))), "sticks": sticks.calculateRingColors() };
         // console.log(json);
         port.write(JSON.stringify(json));
-        await delay(50);
+        await delay(30);
     }
 
 }
