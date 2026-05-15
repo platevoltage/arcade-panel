@@ -44,6 +44,12 @@ void setup() {
   buttonLights.begin();
   FastLED.addLeds<NEOPIXEL, RING_DATA_PIN>(leds, 24);
   FastLED.addLeds<NEOPIXEL, ONBOARD_RGB_DATA_PIN>(onboardLed, 1);
+
+  for (int i = 0; i < 24; i++) {
+    leds[i] = CRGB::Black;
+  }
+  FastLED.show();
+
   USBSerial.print("IM ALIVE");
   for (int i = 0; i < NUM_BUTTONS; i++) {
     USBSerial.print(buttonPins[i]);

@@ -118,5 +118,12 @@ void go() {
     buttonLights.write();
   }
   if (doc["sticks"]) {
+    for (int i = 0; i < 24; i++) {
+      uint8_t r = doc["sticks"][i]["r"];
+      uint8_t g = doc["sticks"][i]["g"];
+      uint8_t b = doc["sticks"][i]["b"];
+      leds[i] = CRGB(r, g, b);
+    }
+    FastLED.show();
   }
 }
