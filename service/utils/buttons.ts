@@ -1,6 +1,6 @@
 import { SerialPort } from "serialport";
 import { delay } from "./utils.ts";
-import { pollStick } from "./sticks.ts";
+import * as sticks from "./sticks.ts";
 
 const NUM_BUTTONS = 20;
 const OVER_SCAN = 2;
@@ -101,7 +101,7 @@ export async function sendButtonColors(port: SerialPort, colors: string[]) {
             forward = true;
             // await delay(1000);
         }
-        const stickCoords = pollStick();
+        const stickCoords = sticks.state;
         console.log(stickCoords);
         const ringColors = [];
         for (let i = 0; i < 24; i++) {
@@ -137,32 +137,3 @@ function scaleBrightness(color: number, factor: number) {
         b: Math.round(b)
     };
 }
-
-// function scaleBrightness48(color: number, factor: number) {
-//     const _color: bigint = BigInt(color);
-//     let r = Number((_color >> 32n) & 0xFFFFn);
-//     let g = Number((_color >> 16n) & 0xFFFFn);
-//     let b = Number(_color & 0xFFFFn);
-
-//     r = Math.round(r * factor);
-//     g = Math.round(g * factor);
-//     b = Math.round(b * factor);
-
-//     return {
-//         r: Number(BigInt(r) << 32n),
-//         g: Number(BigInt(g) << 16n),
-//         b: b
-//     };
-// }
-
-// function scaleBrightness(color: number, factor: number) {
-//     let r = ((color >> 16) & 0xFF) * factor;
-//     let g = ((color >> 8) & 0xFF) * factor;
-//     let b = (color & 0xFF) * factor;
-
-//     return (
-//         (Math.round(r) << 16) |
-//         (Math.round(g) << 8) |
-//         Math.round(b)
-//     );
-// }
