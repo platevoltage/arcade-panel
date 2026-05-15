@@ -58,21 +58,9 @@ export async function sendButtonColors(port: SerialPort, colors: string[]) {
             ...p2StartSelect
         ];
 
-
-        // const json = { "buttons": finalColors.map(x => x.replace("#", "")) };
         finalColorsInt = finalColors.map(c => parseInt(c.replace("#", "0x")));
 
-        const ringColors = [];
-        for (let i = 0; i < 24; i++) {
-            ringColors.push({
-                r: 100,
-                g: 50,
-                b: i * 3
-            })
-        }
-
-
-        const json = { "buttons": finalColorsInt.map(c => scaleBrightness(c, 1)), "sticks": ringColors };
+        const json = { "buttons": finalColorsInt.map(c => scaleBrightness(c, 1)) };
         // console.log(json);
         port.write(JSON.stringify(json));
         await delay(50);
@@ -83,17 +71,8 @@ export async function sendButtonColors(port: SerialPort, colors: string[]) {
     let forward = true;
     while (true) {
         //do other shit with buttons. fades, etc here.
-        await delay(50);
         if (myRun !== runId) return;
 
-        // finalColorsInt = finalColorsInt.map((color) => {
-        //     const newColor = color * 2;
-        //     if (newColor > 0xFFFFFF) {
-        //         return 1;
-        //     }
-        //     return newColor;
-        // });
-        // finalColorsInt = finalColorsInt.map(c => scaleBrightness(c, forward ? .95 : 1.05));
         forward ? count++ : count--;
         if (count >= 70) {
             forward = false;
@@ -122,6 +101,7 @@ export async function sendButtonColors(port: SerialPort, colors: string[]) {
         const json = { "buttons": finalColorsInt.map(c => scaleBrightness(c, 1 * (1 - count * .013))), "sticks": ringColors };
         // console.log(json);
         port.write(JSON.stringify(json));
+        await delay(50);
     }
 
 }
