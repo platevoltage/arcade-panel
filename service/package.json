@@ -15,6 +15,7 @@
     "@elgato-stream-deck/webhid": "^7.3.2",
     "cors": "^2.8.5",
     "crc": "^4.3.2",
+    "eslint": "^10.3.0",
     "express": "^5.1.0",
     "express-cors": "^0.0.3",
     "gif-frames": "^1.0.1",
@@ -25,6 +26,6 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/node": "^24.1.0"
+    "@types/node": "^24.12.4"
   }
 }
