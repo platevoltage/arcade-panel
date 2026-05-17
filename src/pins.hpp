@@ -1,4 +1,4 @@
-// DO NOT USE 39 or 40!!! THEY WILL BREAK USB
+
 
 #define BUTTON_PIN_0_P1 14 // B // bottom row left to right
 #define BUTTON_PIN_1_P1 12 // A
