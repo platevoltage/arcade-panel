@@ -1,7 +1,7 @@
 {
   "build": {
     "core": "esp32",
-    "extra_flags": ["-DARDUINO_USB_CDC_ON_BOOT=1", "-DARDUINO_USB_MODE=1"],
+    "extra_flags": ["-DARDUINO_USB_CDC_ON_BOOT=1", "-DARDUINO_USB_MODE=0"],
     "f_cpu": "240000000L",
     "f_flash": "80000000L",
     "flash_mode": "qio",
@@ -14,7 +14,7 @@
   "debug": {
     "openocd_target": "esp32s3.cfg"
   },
-  "frameworks": ["arduino", "espidf"],
+  "frameworks": ["arduino"],
   "name": "Arcade Panel",
   "upload": {
     "flash_size": "8MB",

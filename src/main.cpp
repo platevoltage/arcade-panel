@@ -1,4 +1,5 @@
-
+// "filesystem": "littlefs",
+// "partitions": "partitions.csv"
 #include <Arduino.h>
 
 #include "USB.h"
@@ -36,6 +37,7 @@ void lightsTask() {
 }
 
 void setup() {
+  storageSetup();
   USB.productName("ARCADE THING");
   USBSerial.begin(115200);
   USBSerial.setTxTimeoutMs(0);
@@ -80,4 +82,7 @@ void setup() {
                           0);
 }
 
-void loop() { lightsTask(); }
+void loop() {
+  lightsTask();
+  Serial.println("HI");
+}

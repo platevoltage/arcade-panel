@@ -1,8 +1,9 @@
 #include "lights.hpp"
 #include "pins.hpp"
+#include "storage.hpp"
 #include <Arduino.h>
 
-USBCDC USBSerial;
+// USBCDC USBSerial;
 
 USBHIDKeyboard Keyboard;
 bool pauseProbing = false;
