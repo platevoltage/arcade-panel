@@ -3,7 +3,7 @@
 #include "storage.hpp"
 #include <Arduino.h>
 
-// USBCDC USBSerial;
+USBCDC USBSerial;
 
 USBHIDKeyboard Keyboard;
 bool pauseProbing = false;
@@ -45,13 +45,21 @@ const uint8_t keys[NUM_BUTTONS] = {
     _KEY_4_P2, _KEY_5_P2, _KEY_6_P2, _KEY_7_P2, _KEY_8_P2, _KEY_9_P2,
 };
 
+bool buttonState[NUM_BUTTONS] = {false};
+
 bool probeButton(uint8_t buttonPin, uint8_t buttonNumber) {
   if (!digitalRead(buttonPin)) {
-    USBSerial.print(buttonNumber);
-    Keyboard.press(keys[buttonNumber]);
+    // Serial.print(buttonNumber);
+    if (!buttonState[buttonNumber]) {
+      Keyboard.press(keys[buttonNumber]);
+      buttonState[buttonNumber] = true;
+    }
     return true;
   } else {
-    Keyboard.release(keys[buttonNumber]);
+    if (buttonState[buttonNumber]) {
+      Keyboard.release(keys[buttonNumber]);
+      buttonState[buttonNumber] = false;
+    }
     return false;
   }
 }
@@ -66,13 +74,13 @@ void keyboardTask(void *pvParameters) {
         }
       }
     }
-    if (buttonPushed) {
-      onboardLed[0] = CRGB::Blue;
-      FastLED.show();
-    } else {
-      onboardLed[0] = CRGB::Black;
-      FastLED.show();
-    }
+    // if (buttonPushed) {
+    //   onboardLed[0] = CRGB::Blue;
+    //   FastLED.show();
+    // } else {
+    //   onboardLed[0] = CRGB::Black;
+    //   FastLED.show();
+    // }
     vTaskDelay(1);
   }
 }

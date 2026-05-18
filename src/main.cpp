@@ -7,32 +7,44 @@
 #include "keyboard.hpp"
 
 char jsonBuffer[4096];
-void lightsTask() {
 
-  USBSerial.setTimeout(10);
+void pollUSB() {
 
-  while (1) {
+  static int len = 0;
 
-    int len =
-        USBSerial.readBytesUntil('\n', jsonBuffer, sizeof(jsonBuffer) - 1);
+  while (USBSerial.available()) {
 
-    if (len > 0) {
+    char c = USBSerial.read();
+    // UART.print(c);
+    if (c == '\n') {
 
       jsonBuffer[len] = '\0';
-      // Serial.println(len);
-      if (jsonBuffer[0] == '{') {
-        // parse later
-        for (int i = 0; i < NUM_BUTTONS; i++) {
-          r[i] = g[i] = b[i] = 0;
+
+      if (len > 0) {
+
+        if (jsonBuffer[0] == '{') {
+
+          for (int i = 0; i < NUM_BUTTONS; i++) {
+            r[i] = g[i] = b[i] = 0;
+          }
+
+          jsonString = String(jsonBuffer);
+          // UART.println(jsonString);
+
+        } else {
+          typeKey(jsonBuffer[0], KEY_LEFT_SHIFT);
         }
-        jsonString = String(jsonBuffer);
-        // go();
+      }
+
+      len = 0; // reset line buffer
+    } else {
+      if (len < (int)sizeof(jsonBuffer) - 1) {
+        jsonBuffer[len++] = c;
       } else {
-        typeKey(jsonBuffer[0], KEY_LEFT_SHIFT);
+        // overflow protection: reset line
+        len = 0;
       }
     }
-
-    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 
@@ -42,7 +54,7 @@ void setup() {
   USBSerial.begin(115200);
   USBSerial.setTxTimeoutMs(0);
   USBSerial.setRxBufferSize(0xFFFF);
-  Serial.begin(115200);
+  UART.begin(115200);
   buttonLights.begin();
   FastLED.addLeds<NEOPIXEL, RING_DATA_PIN>(leds, 24);
   FastLED.addLeds<NEOPIXEL, ONBOARD_RGB_DATA_PIN>(onboardLed, 1);
@@ -64,8 +76,8 @@ void setup() {
   // delay(2000);
   USB.begin();
   Keyboard.begin();
-
-  delay(10000);
+  delay(4000);
+  // lightsTask(NULL);
   xTaskCreatePinnedToCore(keyboardTask,   // Function to run
                           "keyboardTask", // Name
                           4096,           // Stack size
@@ -79,10 +91,14 @@ void setup() {
                           NULL, // Parameters
                           1,    // Priority
                           NULL, // Task handle
-                          0);
+                          1);
+  // xTaskCreatePinnedToCore(lightsTask, // Function to run
+  //                         "lights",   // Name
+  //                         0x4000,     // Stack size
+  //                         NULL,       // Parameters
+  //                         1,          // Priority
+  //                         NULL,       // Task handle
+  //                         1);
 }
 
-void loop() {
-  lightsTask();
-  Serial.println("HI");
-}
+void loop() { pollUSB(); }
