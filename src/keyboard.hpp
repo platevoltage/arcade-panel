@@ -142,6 +142,25 @@ void startPreferences() { preferences.begin("prefs"); }
 void keyboardTask(void *pvParameters) {
   _KEY_0_P1 = preferences.getChar("key-player1-0", 'z');
   _KEY_1_P1 = preferences.getChar("key-player1-1", 'x');
+  _KEY_2_P1 = preferences.getChar("key-player1-2", 'q');
+  _KEY_3_P1 = preferences.getChar("key-player1-3", 'w');
+  _KEY_4_P1 = preferences.getChar("key-player1-4", 'a');
+  _KEY_5_P1 = preferences.getChar("key-player1-5", 's');
+  _KEY_6_P1 = preferences.getChar("key-player1-6", '1');
+  _KEY_7_P1 = preferences.getChar("key-player1-7", '2');
+  _KEY_8_P1 = preferences.getChar("key-player1-8", KEY_SPACE);
+  _KEY_9_P1 = preferences.getChar("key-player1-9", KEY_RETURN);
+
+  _KEY_0_P2 = preferences.getChar("key-player2-0", 't');
+  _KEY_1_P2 = preferences.getChar("key-player2-1", 'y');
+  _KEY_2_P2 = preferences.getChar("key-player2-2", 'u');
+  _KEY_3_P2 = preferences.getChar("key-player2-3", 'i');
+  _KEY_4_P2 = preferences.getChar("key-player2-4", 'o');
+  _KEY_5_P2 = preferences.getChar("key-player2-5", 'f');
+  _KEY_6_P2 = preferences.getChar("key-player2-6", '3');
+  _KEY_7_P2 = preferences.getChar("key-player2-7", '4');
+  _KEY_8_P2 = preferences.getChar("key-player2-8", 'g');
+  _KEY_9_P2 = preferences.getChar("key-player2-9", 'j');
 
   const uint8_t keys[NUM_BUTTONS] = {
       _KEY_0_P1, _KEY_1_P1, _KEY_2_P1, _KEY_3_P1, _KEY_4_P1,

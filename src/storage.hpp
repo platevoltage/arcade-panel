@@ -147,6 +147,19 @@ static uint8_t msc_disk[DISK_SECTOR_COUNT][DISK_SECTOR_SIZE] = {
     //------------- Block3: Readme Content -------------//
     {0}};
 
+char getValueRead(const char *input) {
+  for (int i = 0; i < keyMapSize; i++) {
+    if (strcmp(keyMap[i].name, input) == 0) {
+      // strcpy(buf, keyMap[i].name);
+      return keyMap[i].code;
+    }
+  }
+
+  // buf[0] = input;
+  // buf[1] = '\0';
+  return input[0];
+}
+
 static int32_t onWrite(uint32_t lba, uint32_t offset, uint8_t *buffer,
                        uint32_t bufsize) {
 
@@ -164,42 +177,149 @@ static int32_t onWrite(uint32_t lba, uint32_t offset, uint8_t *buffer,
 
       Serial.println("CONFIG FOUND:");
       Serial.println(data);
+
       JsonDocument doc;
       deserializeJson(doc, buffer);
+
       const char *p1_0 = doc["keys"]["player1"]["0"];
       if (p1_0) {
-        preferences.putChar("key-player1-0", p1_0[0]);
-        _KEY_0_P1 = p1_0[0];
+        char _p1_0 = getValueRead(p1_0);
+        preferences.putChar("key-player1-0", _p1_0);
+        _KEY_0_P1 = _p1_0;
       }
+
       const char *p1_1 = doc["keys"]["player1"]["1"];
       if (p1_1) {
-        preferences.putChar("key-player1-1", p1_1[0]);
-        _KEY_1_P1 = p1_1[0];
+        char _p1_1 = getValueRead(p1_1);
+        preferences.putChar("key-player1-1", _p1_1);
+        _KEY_1_P1 = _p1_1;
       }
+
       const char *p1_2 = doc["keys"]["player1"]["2"];
-      if (p1_2)
-        preferences.putChar("key-player1-2", p1_2[0]);
+      if (p1_2) {
+        char _p1_2 = getValueRead(p1_2);
+        preferences.putChar("key-player1-2", _p1_2);
+        _KEY_2_P1 = _p1_2;
+      }
+
       const char *p1_3 = doc["keys"]["player1"]["3"];
-      if (p1_3)
-        preferences.putChar("key-player1-3", p1_3[0]);
+      if (p1_3) {
+        char _p1_3 = getValueRead(p1_3);
+        preferences.putChar("key-player1-3", _p1_3);
+        _KEY_3_P1 = _p1_3;
+      }
+
       const char *p1_4 = doc["keys"]["player1"]["4"];
-      if (p1_4)
-        preferences.putChar("key-player1-4", p1_4[0]);
+      if (p1_4) {
+        char _p1_4 = getValueRead(p1_4);
+        preferences.putChar("key-player1-4", _p1_4);
+        _KEY_4_P1 = _p1_4;
+      }
+
       const char *p1_5 = doc["keys"]["player1"]["5"];
-      if (p1_5)
-        preferences.putChar("key-player1-5", p1_5[0]);
+      if (p1_5) {
+        char _p1_5 = getValueRead(p1_5);
+        preferences.putChar("key-player1-5", _p1_5);
+        _KEY_5_P1 = _p1_5;
+      }
+
       const char *p1_6 = doc["keys"]["player1"]["6"];
-      if (p1_6)
-        preferences.putChar("key-player1-6", p1_6[0]);
+      if (p1_6) {
+        char _p1_6 = getValueRead(p1_6);
+        preferences.putChar("key-player1-6", _p1_6);
+        _KEY_6_P1 = _p1_6;
+      }
+
       const char *p1_7 = doc["keys"]["player1"]["7"];
-      if (p1_7)
-        preferences.putChar("key-player1-7", p1_7[0]);
+      if (p1_7) {
+        char _p1_7 = getValueRead(p1_7);
+        preferences.putChar("key-player1-7", _p1_7);
+        _KEY_7_P1 = _p1_7;
+      }
+
       const char *p1_8 = doc["keys"]["player1"]["8"];
-      if (p1_8)
-        preferences.putChar("key-player1-8", p1_8[0]);
+      if (p1_8) {
+        char _p1_8 = getValueRead(p1_8);
+        preferences.putChar("key-player1-8", _p1_8);
+        _KEY_8_P1 = _p1_8;
+      }
+
       const char *p1_9 = doc["keys"]["player1"]["9"];
-      if (p1_9)
-        preferences.putChar("key-player1-9", p1_9[0]);
+      if (p1_9) {
+        char _p1_9 = getValueRead(p1_9);
+        preferences.putChar("key-player1-9", _p1_9);
+        _KEY_9_P1 = _p1_9;
+      }
+
+      const char *p2_0 = doc["keys"]["player2"]["0"];
+      if (p2_0) {
+        char _p2_0 = getValueRead(p2_0);
+        preferences.putChar("key-player2-0", _p2_0);
+        _KEY_0_P2 = _p2_0;
+      }
+
+      const char *p2_1 = doc["keys"]["player2"]["1"];
+      if (p2_1) {
+        char _p2_1 = getValueRead(p2_1);
+        preferences.putChar("key-player2-1", _p2_1);
+        _KEY_1_P2 = _p2_1;
+      }
+
+      const char *p2_2 = doc["keys"]["player2"]["2"];
+      if (p2_2) {
+        char _p2_2 = getValueRead(p2_2);
+        preferences.putChar("key-player2-2", _p2_2);
+        _KEY_2_P2 = _p2_2;
+      }
+
+      const char *p2_3 = doc["keys"]["player2"]["3"];
+      if (p2_3) {
+        char _p2_3 = getValueRead(p2_3);
+        preferences.putChar("key-player2-3", _p2_3);
+        _KEY_3_P2 = _p2_3;
+      }
+
+      const char *p2_4 = doc["keys"]["player2"]["4"];
+      if (p2_4) {
+        char _p2_4 = getValueRead(p2_4);
+        preferences.putChar("key-player2-4", _p2_4);
+        _KEY_4_P2 = _p2_4;
+      }
+
+      const char *p2_5 = doc["keys"]["player2"]["5"];
+      if (p2_5) {
+        char _p2_5 = getValueRead(p2_5);
+        preferences.putChar("key-player2-5", _p2_5);
+        _KEY_5_P2 = _p2_5;
+      }
+
+      const char *p2_6 = doc["keys"]["player2"]["6"];
+      if (p2_6) {
+        char _p2_6 = getValueRead(p2_6);
+        preferences.putChar("key-player2-6", _p2_6);
+        _KEY_6_P2 = _p2_6;
+      }
+
+      const char *p2_7 = doc["keys"]["player2"]["7"];
+      if (p2_7) {
+        char _p2_7 = getValueRead(p2_7);
+        preferences.putChar("key-player2-7", _p2_7);
+        _KEY_7_P2 = _p2_7;
+      }
+
+      const char *p2_8 = doc["keys"]["player2"]["8"];
+      if (p2_8) {
+        char _p2_8 = getValueRead(p2_8);
+        preferences.putChar("key-player2-8", _p2_8);
+        _KEY_8_P2 = _p2_8;
+      }
+
+      const char *p2_9 = doc["keys"]["player2"]["9"];
+      if (p2_9) {
+        char _p2_9 = getValueRead(p2_9);
+        preferences.putChar("key-player2-9", _p2_9);
+        _KEY_9_P2 = _p2_9;
+      }
     }
   }
 
@@ -253,7 +373,7 @@ static void usbEventCallback(void *arg, esp_event_base_t event_base,
   }
 }
 
-void getValue(char input, char *buf) {
+void getValueWrite(char input, char *buf) {
   for (int i = 0; i < keyMapSize; i++) {
     if (input == keyMap[i].code) {
       strcpy(buf, keyMap[i].name);
@@ -267,51 +387,50 @@ void getValue(char input, char *buf) {
 
 void writeFileOnBoot() {
   // char msg[64];
-
   JsonDocument doc;
 
   char buf[20] = {' ', '\0'};
 
-  getValue(preferences.getChar("key-player1-0", 'z'), buf);
+  getValueWrite(preferences.getChar("key-player1-0", 'z'), buf);
   doc["keys"]["player1"]["0"] = buf;
-  getValue(preferences.getChar("key-player1-1", 'x'), buf);
+  getValueWrite(preferences.getChar("key-player1-1", 'x'), buf);
   doc["keys"]["player1"]["1"] = buf;
-  getValue(preferences.getChar("key-player1-2", 'q'), buf);
+  getValueWrite(preferences.getChar("key-player1-2", 'q'), buf);
   doc["keys"]["player1"]["2"] = buf;
-  getValue(preferences.getChar("key-player1-3", 'w'), buf);
+  getValueWrite(preferences.getChar("key-player1-3", 'w'), buf);
   doc["keys"]["player1"]["3"] = buf;
-  getValue(preferences.getChar("key-player1-4", 'a'), buf);
+  getValueWrite(preferences.getChar("key-player1-4", 'a'), buf);
   doc["keys"]["player1"]["4"] = buf;
-  getValue(preferences.getChar("key-player1-5", 's'), buf);
+  getValueWrite(preferences.getChar("key-player1-5", 's'), buf);
   doc["keys"]["player1"]["5"] = buf;
-  getValue(preferences.getChar("key-player1-6", '1'), buf);
+  getValueWrite(preferences.getChar("key-player1-6", '1'), buf);
   doc["keys"]["player1"]["6"] = buf;
-  getValue(preferences.getChar("key-player1-7", '2'), buf);
+  getValueWrite(preferences.getChar("key-player1-7", '2'), buf);
   doc["keys"]["player1"]["7"] = buf;
-  getValue(preferences.getChar("key-player1-8", KEY_SPACE), buf);
+  getValueWrite(preferences.getChar("key-player1-8", KEY_SPACE), buf);
   doc["keys"]["player1"]["8"] = buf;
-  getValue(preferences.getChar("key-player1-9", KEY_RETURN), buf);
+  getValueWrite(preferences.getChar("key-player1-9", KEY_RETURN), buf);
   doc["keys"]["player1"]["9"] = buf;
 
-  getValue(preferences.getChar("key-player2-0", 't'), buf);
+  getValueWrite(preferences.getChar("key-player2-0", 't'), buf);
   doc["keys"]["player2"]["0"] = buf;
-  getValue(preferences.getChar("key-player2-1", 'y'), buf);
+  getValueWrite(preferences.getChar("key-player2-1", 'y'), buf);
   doc["keys"]["player2"]["1"] = buf;
-  getValue(preferences.getChar("key-player2-2", 'u'), buf);
+  getValueWrite(preferences.getChar("key-player2-2", 'u'), buf);
   doc["keys"]["player2"]["2"] = buf;
-  getValue(preferences.getChar("key-player2-3", 'i'), buf);
+  getValueWrite(preferences.getChar("key-player2-3", 'i'), buf);
   doc["keys"]["player2"]["3"] = buf;
-  getValue(preferences.getChar("key-player2-4", 'o'), buf);
+  getValueWrite(preferences.getChar("key-player2-4", 'o'), buf);
   doc["keys"]["player2"]["4"] = buf;
-  getValue(preferences.getChar("key-player2-5", 'f'), buf);
+  getValueWrite(preferences.getChar("key-player2-5", 'f'), buf);
   doc["keys"]["player2"]["5"] = buf;
-  getValue(preferences.getChar("key-player2-6", '3'), buf);
+  getValueWrite(preferences.getChar("key-player2-6", '3'), buf);
   doc["keys"]["player2"]["6"] = buf;
-  getValue(preferences.getChar("key-player2-7", '4'), buf);
+  getValueWrite(preferences.getChar("key-player2-7", '4'), buf);
   doc["keys"]["player2"]["7"] = buf;
-  getValue(preferences.getChar("key-player2-8", 'g'), buf);
+  getValueWrite(preferences.getChar("key-player2-8", 'g'), buf);
   doc["keys"]["player2"]["8"] = buf;
-  getValue(preferences.getChar("key-player2-9", 'j'), buf);
+  getValueWrite(preferences.getChar("key-player2-9", 'j'), buf);
   doc["keys"]["player2"]["9"] = buf;
 
   const char *blank =
