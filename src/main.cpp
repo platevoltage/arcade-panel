@@ -77,15 +77,15 @@ void setup() {
   // delay(2000);
   USB.begin();
   Keyboard.begin();
-  delay(4000);
+  delay(2000);
   // lightsTask(NULL);
-  xTaskCreatePinnedToCore(keyboardTask,   // Function to run
-                          "keyboardTask", // Name
-                          4096,           // Stack size
-                          NULL,           // Parameters
-                          1,              // Priority
-                          NULL,           // Task handle
-                          0);
+  // xTaskCreatePinnedToCore(keyboardTask,        // Function to run
+  //                         "keyboardTask",      // Name
+  //                         4096,                // Stack size
+  //                         NULL,                // Parameters
+  //                         1,                   // Priority
+  //                         &keyboardTaskHandle, // Task handle
+  //                         0);
   xTaskCreatePinnedToCore(go,   // Function to run
                           "go", // Name
                           4096, // Stack size
@@ -102,4 +102,15 @@ void setup() {
   //                         1);
 }
 
-void loop() { pollUSB(); }
+void loop() {
+  pollUSB();
+  if (!keyboardTaskHandle) {
+    xTaskCreatePinnedToCore(keyboardTask,        // Function to run
+                            "keyboardTask",      // Name
+                            4096,                // Stack size
+                            NULL,                // Parameters
+                            1,                   // Priority
+                            &keyboardTaskHandle, // Task handle
+                            0);
+  }
+}

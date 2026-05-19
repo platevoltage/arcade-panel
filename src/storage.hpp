@@ -163,7 +163,7 @@ static int32_t onWrite(uint32_t lba, uint32_t offset, uint8_t *buffer,
     if (strstr(data, "\"keys\": {")) {
 
       Serial.println("CONFIG FOUND:");
-      // Serial.println(data);
+      Serial.println(data);
       JsonDocument doc;
       deserializeJson(doc, buffer);
       const char *p1_0 = doc["keys"]["player1"]["0"];
@@ -201,6 +201,12 @@ static int32_t onWrite(uint32_t lba, uint32_t offset, uint8_t *buffer,
       if (p1_9)
         preferences.putChar("key-player1-9", p1_9[0]);
     }
+  }
+
+  if (millis() > 10000 && keyboardTaskHandle) {
+    vTaskDelay(1);
+    vTaskDelete(keyboardTaskHandle);
+    keyboardTaskHandle = NULL;
   }
 
   return bufsize;

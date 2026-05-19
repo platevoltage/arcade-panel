@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <Preferences.h>
 
+TaskHandle_t keyboardTaskHandle = NULL;
 USBCDC USBSerial;
 USBHIDKeyboard Keyboard;
 Preferences preferences;
