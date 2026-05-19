@@ -4,7 +4,7 @@
 
 #include "USB.h"
 #include "USBHIDKeyboard.h"
-#include "keyboard.hpp"
+#include "storage.hpp"
 
 char jsonBuffer[4096];
 
@@ -49,6 +49,7 @@ void pollUSB() {
 }
 
 void setup() {
+  startPreferences();
   storageSetup();
   USB.productName("ARCADE THING");
   USBSerial.begin(115200);

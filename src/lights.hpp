@@ -72,7 +72,7 @@ void go(void *pvParameters) {
     DeserializationError error = deserializeJson(doc, jsonString);
 
     if (error) {
-      Serial.println("JSON parse error");
+      // Serial.println("JSON parse error");
 
     } else {
 
@@ -98,22 +98,22 @@ void go(void *pvParameters) {
           // g[i] = (color >> 16) & 0xFFFF;
           // b[i] = color & 0xFFFF;
 
-          UART.print(i);
-          UART.print(") ");
+          // UART.print(i);
+          // UART.print(") ");
           // Serial.print(color);
           // Serial.print(" / ");
-          UART.print(r);
-          UART.print(" ");
-          UART.print(g);
-          UART.print(" ");
-          UART.print(b);
-          UART.print(" / ");
-          UART.print(r, HEX);
-          UART.print(" ");
-          UART.print(g, HEX);
-          UART.print(" ");
-          UART.print(b, HEX);
-          UART.println(" ");
+          // UART.print(r);
+          // UART.print(" ");
+          // UART.print(g);
+          // UART.print(" ");
+          // UART.print(b);
+          // UART.print(" / ");
+          // UART.print(r, HEX);
+          // UART.print(" ");
+          // UART.print(g, HEX);
+          // UART.print(" ");
+          // UART.print(b, HEX);
+          // UART.println(" ");
 
           // r[i] = map(r[i], 0, 255, 0, 4095);
           // g[i] = map(g[i], 0, 255, 0, 4095);

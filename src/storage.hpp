@@ -1,13 +1,10 @@
 #include <Arduino.h>
-// #ifndef ARDUINO_USB_MODE
-// #error This ESP32 SoC has no Native USB interface
-// #elif ARDUINO_USB_MODE == 1
-// #warning This sketch should be used when USB is in OTG mode
-// void setup() {}
-// void loop() {}
-// #else
+
 #include "USB.h"
 #include "USBMSC.h"
+#include "keyboard.hpp"
+#include <ArduinoJson.h>
+#include <Preferences.h>
 
 USBMSC MSC;
 
@@ -25,11 +22,11 @@ USBMSC MSC;
 #define FAT_TBL2B(l, h)                                                        \
   FAT_U8(l), FAT_U8(((l >> 8) & 0xF) | ((h << 4) & 0xF0)), FAT_U8(h >> 4)
 
-#define README_CONTENTS                                                        \
-  "This is tinyusb's MassStorage Class demo.\r\n\r\nIf you find any bugs or "  \
-  "get any questions, feel free to file an\r\nissue at "                       \
-  "github.com/hathach/tinyusb"
+// #define README_CONTENTS ""
+#define FILE_SIZE 512
+static const uint8_t README_CONTENTS[FILE_SIZE] = {0};
 
+// Preferences preferences;
 static const uint32_t DISK_SECTOR_COUNT =
     2 * 8; // 8KB is the smallest size that windows allow to mount
 static const uint16_t DISK_SECTOR_SIZE = 512; // Should be 512
@@ -122,7 +119,7 @@ static uint8_t msc_disk[DISK_SECTOR_COUNT][DISK_SECTOR_SIZE] = {
     //------------- Block2: Root Directory -------------//
     {
         // first entry is volume label
-        'E', 'S', 'P', '3', '2', 'S', '2', ' ', 'M', 'S', 'C',
+        'A', 'R', 'C', 'A', 'D', 'E', 'P', 'A', 'N', 'E', 'L',
         0x08, // FILE_ATTR_VOLUME_LABEL
         0x00, FAT_MS2B(0, 0), FAT_HMS2B(0, 0, 0), FAT_YMD2B(0, 0, 0),
         FAT_YMD2B(0, 0, 0), FAT_U16(0),
@@ -131,9 +128,9 @@ static uint8_t msc_disk[DISK_SECTOR_COUNT][DISK_SECTOR_SIZE] = {
         FAT_U16(0), FAT_U32(0),
 
         // second entry is readme file
-        'R', 'E', 'A', 'D', 'M', 'E', ' ',
+        'c', 'o', 'n', 'f', 'i', 'g', ' ',
         ' ',                    // file_name[8]; padded with spaces (0x20)
-        'T', 'X', 'T',          // file_extension[3]; padded with spaces (0x20)
+        'j', 's', 'n',          // file_extension[3]; padded with spaces (0x20)
         0x20,                   // file attributes: FILE_ATTR_ARCHIVE
         0x00,                   // ignore
         FAT_MS2B(1, 980),       // creation_time_10_ms (max 199x10 = 1s 990ms)
@@ -144,18 +141,68 @@ static uint8_t msc_disk[DISK_SECTOR_COUNT][DISK_SECTOR_SIZE] = {
         FAT_HMS2B(13, 44, 16),  // last_modified_hms
         FAT_YMD2B(2019, 11, 5), // last_modified_ymd
         FAT_U16(2),             // start of file in cluster
-        FAT_U32(sizeof(README_CONTENTS) - 1) // file size
+        FAT_U32(FILE_SIZE)      // file size
     },
 
     //------------- Block3: Readme Content -------------//
-    README_CONTENTS};
+    {0}};
 
 static int32_t onWrite(uint32_t lba, uint32_t offset, uint8_t *buffer,
                        uint32_t bufsize) {
-  Serial.printf("MSC WRITE: lba: %" PRIu32 ", offset: %" PRIu32
-                ", bufsize: %" PRIu32 "\n",
-                lba, offset, bufsize);
+
   memcpy(msc_disk[lba] + offset, buffer, bufsize);
+
+  Serial.printf("WRITE LBA %lu\n", lba);
+
+  // dump whole disk looking for README text
+  for (int i = 0; i < DISK_SECTOR_COUNT; i++) {
+
+    char *data = (char *)msc_disk[i];
+    data[FILE_SIZE - 1] = '\0';
+
+    if (strstr(data, "\"keys\": {")) {
+
+      Serial.println("CONFIG FOUND:");
+      // Serial.println(data);
+      JsonDocument doc;
+      deserializeJson(doc, buffer);
+      const char *p1_0 = doc["keys"]["player1"]["0"];
+      if (p1_0) {
+        preferences.putChar("key-player1-0", p1_0[0]);
+        _KEY_0_P1 = p1_0[0];
+      }
+      const char *p1_1 = doc["keys"]["player1"]["1"];
+      if (p1_1) {
+        preferences.putChar("key-player1-1", p1_1[0]);
+        _KEY_1_P1 = p1_1[0];
+      }
+      const char *p1_2 = doc["keys"]["player1"]["2"];
+      if (p1_2)
+        preferences.putChar("key-player1-2", p1_2[0]);
+      const char *p1_3 = doc["keys"]["player1"]["3"];
+      if (p1_3)
+        preferences.putChar("key-player1-3", p1_3[0]);
+      const char *p1_4 = doc["keys"]["player1"]["4"];
+      if (p1_4)
+        preferences.putChar("key-player1-4", p1_4[0]);
+      const char *p1_5 = doc["keys"]["player1"]["5"];
+      if (p1_5)
+        preferences.putChar("key-player1-5", p1_5[0]);
+      const char *p1_6 = doc["keys"]["player1"]["6"];
+      if (p1_6)
+        preferences.putChar("key-player1-6", p1_6[0]);
+      const char *p1_7 = doc["keys"]["player1"]["7"];
+      if (p1_7)
+        preferences.putChar("key-player1-7", p1_7[0]);
+      const char *p1_8 = doc["keys"]["player1"]["8"];
+      if (p1_8)
+        preferences.putChar("key-player1-8", p1_8[0]);
+      const char *p1_9 = doc["keys"]["player1"]["9"];
+      if (p1_9)
+        preferences.putChar("key-player1-9", p1_9[0]);
+    }
+  }
+
   return bufsize;
 }
 
@@ -165,6 +212,7 @@ static int32_t onRead(uint32_t lba, uint32_t offset, void *buffer,
                 ", bufsize: %" PRIu32 "\n",
                 lba, offset, bufsize);
   memcpy(buffer, msc_disk[lba] + offset, bufsize);
+
   return bufsize;
 }
 
@@ -199,6 +247,85 @@ static void usbEventCallback(void *arg, esp_event_base_t event_base,
   }
 }
 
+void getValue(char input, char *buf) {
+  for (int i = 0; i < keyMapSize; i++) {
+    if (input == keyMap[i].code) {
+      strcpy(buf, keyMap[i].name);
+      return;
+    }
+  }
+
+  buf[0] = input;
+  buf[1] = '\0';
+}
+
+void writeFileOnBoot() {
+  // char msg[64];
+
+  JsonDocument doc;
+
+  char buf[20] = {' ', '\0'};
+
+  getValue(preferences.getChar("key-player1-0", 'z'), buf);
+  doc["keys"]["player1"]["0"] = buf;
+  getValue(preferences.getChar("key-player1-1", 'x'), buf);
+  doc["keys"]["player1"]["1"] = buf;
+  getValue(preferences.getChar("key-player1-2", 'q'), buf);
+  doc["keys"]["player1"]["2"] = buf;
+  getValue(preferences.getChar("key-player1-3", 'w'), buf);
+  doc["keys"]["player1"]["3"] = buf;
+  getValue(preferences.getChar("key-player1-4", 'a'), buf);
+  doc["keys"]["player1"]["4"] = buf;
+  getValue(preferences.getChar("key-player1-5", 's'), buf);
+  doc["keys"]["player1"]["5"] = buf;
+  getValue(preferences.getChar("key-player1-6", '1'), buf);
+  doc["keys"]["player1"]["6"] = buf;
+  getValue(preferences.getChar("key-player1-7", '2'), buf);
+  doc["keys"]["player1"]["7"] = buf;
+  getValue(preferences.getChar("key-player1-8", KEY_SPACE), buf);
+  doc["keys"]["player1"]["8"] = buf;
+  getValue(preferences.getChar("key-player1-9", KEY_RETURN), buf);
+  doc["keys"]["player1"]["9"] = buf;
+
+  getValue(preferences.getChar("key-player2-0", 't'), buf);
+  doc["keys"]["player2"]["0"] = buf;
+  getValue(preferences.getChar("key-player2-1", 'y'), buf);
+  doc["keys"]["player2"]["1"] = buf;
+  getValue(preferences.getChar("key-player2-2", 'u'), buf);
+  doc["keys"]["player2"]["2"] = buf;
+  getValue(preferences.getChar("key-player2-3", 'i'), buf);
+  doc["keys"]["player2"]["3"] = buf;
+  getValue(preferences.getChar("key-player2-4", 'o'), buf);
+  doc["keys"]["player2"]["4"] = buf;
+  getValue(preferences.getChar("key-player2-5", 'f'), buf);
+  doc["keys"]["player2"]["5"] = buf;
+  getValue(preferences.getChar("key-player2-6", '3'), buf);
+  doc["keys"]["player2"]["6"] = buf;
+  getValue(preferences.getChar("key-player2-7", '4'), buf);
+  doc["keys"]["player2"]["7"] = buf;
+  getValue(preferences.getChar("key-player2-8", 'g'), buf);
+  doc["keys"]["player2"]["8"] = buf;
+  getValue(preferences.getChar("key-player2-9", 'j'), buf);
+  doc["keys"]["player2"]["9"] = buf;
+
+  const char *blank =
+      "                                                                        "
+      "                                                                        "
+      "                                                                        "
+      "                                                                        "
+      "                                                                        "
+      "                                                                        "
+      "                                                                        "
+      "                                                                       "
+      "                                                                        "
+      " ";
+
+  memcpy(msc_disk[3], blank, FILE_SIZE);
+  size_t len = serializeJsonPretty(doc, (char *)msc_disk[3], 512);
+  msc_disk[3][len] = '\n';
+  // memcpy(msc_disk[3], msg, strlen(msg));
+}
+
 void storageSetup() {
   Serial.begin(115200);
   Serial.setDebugOutput(true);
@@ -216,9 +343,6 @@ void storageSetup() {
 
   MSC.begin(DISK_SECTOR_COUNT, DISK_SECTOR_SIZE);
   //   USB.begin();
+  // preferences.begin("prefs");
+  writeFileOnBoot();
 }
-
-// void loop() {
-//   // put your main code here, to run repeatedly:
-// }
-// #endif /* ARDUINO_USB_MODE */
