@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <FastLED.h>
-
+HardwareSerial UART(0);
 #define NUM_TLC5947 3
 
 #define NUM_BUTTONS 20
@@ -35,6 +35,8 @@
 
 #define FASTLED_RMT_BUILTIN_DRIVER 1
 #define FASTLED_RMT_USE_ASYNC 0
+
+#define FASTLED_RMT_MAX_CHANNELS 1
 
 uint8_t buttons[NUM_BUTTONS] = {
     TOP_1_P1,    TOP_2_P1,    TOP_3_P1,    TOP_4_P1,  BOTTOM_1_P1,
@@ -70,7 +72,7 @@ void go(void *pvParameters) {
     DeserializationError error = deserializeJson(doc, jsonString);
 
     if (error) {
-      Serial.println("JSON parse error");
+      // Serial.println("JSON parse error");
 
     } else {
 
@@ -96,22 +98,22 @@ void go(void *pvParameters) {
           // g[i] = (color >> 16) & 0xFFFF;
           // b[i] = color & 0xFFFF;
 
-          Serial.print(i);
-          Serial.print(") ");
+          // UART.print(i);
+          // UART.print(") ");
           // Serial.print(color);
           // Serial.print(" / ");
-          Serial.print(r);
-          Serial.print(" ");
-          Serial.print(g);
-          Serial.print(" ");
-          Serial.print(b);
-          Serial.print(" / ");
-          Serial.print(r, HEX);
-          Serial.print(" ");
-          Serial.print(g, HEX);
-          Serial.print(" ");
-          Serial.print(b, HEX);
-          Serial.println(" ");
+          // UART.print(r);
+          // UART.print(" ");
+          // UART.print(g);
+          // UART.print(" ");
+          // UART.print(b);
+          // UART.print(" / ");
+          // UART.print(r, HEX);
+          // UART.print(" ");
+          // UART.print(g, HEX);
+          // UART.print(" ");
+          // UART.print(b, HEX);
+          // UART.println(" ");
 
           // r[i] = map(r[i], 0, 255, 0, 4095);
           // g[i] = map(g[i], 0, 255, 0, 4095);

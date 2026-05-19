@@ -39,12 +39,12 @@ export function start() {
 
     const raw = fs.readFileSync("/proc/bus/input/devices", "utf8");
 
-    console.log(raw);
+    // console.log(raw);
 
     function readNext() {
         fs.read(fd, buffer, 0, 8, null, (err, bytesRead) => {
             if (err) {
-                console.error(err);
+                // console.error(err);
                 setImmediate(readNext);
                 return;
             }
@@ -67,7 +67,7 @@ export function start() {
 
                     // console.log({ x: state.x, y: state.y });
                     state.travel = scaleInt16to8(Math.abs(state.x) + Math.abs(state.y))
-                    console.log(state.travel);
+                    // console.log(state.travel);
                 }
             }
 
