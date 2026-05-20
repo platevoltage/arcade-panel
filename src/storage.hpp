@@ -154,10 +154,12 @@ char getValueRead(const char *input) {
       return keyMap[i].code;
     }
   }
-
-  // buf[0] = input;
-  // buf[1] = '\0';
-  return input[0];
+  Serial.println(strlen(input));
+  if (strlen(input) == 1) {
+    return input[0];
+  } else {
+    return '\0';
+  }
 }
 
 static int32_t onWrite(uint32_t lba, uint32_t offset, uint8_t *buffer,
@@ -177,15 +179,21 @@ static int32_t onWrite(uint32_t lba, uint32_t offset, uint8_t *buffer,
 
       Serial.println("CONFIG FOUND:");
       Serial.println(data);
-
+      char *jsonStart = strchr(data, '{');
       JsonDocument doc;
-      deserializeJson(doc, buffer);
+      deserializeJson(doc, jsonStart);
 
       const char *p1_0 = doc["keys"]["player1"]["0"];
       if (p1_0) {
         char _p1_0 = getValueRead(p1_0);
+        if (_p1_0 == '\0') {
+          Serial.println("ERROR");
+          char buf[20] = {'e', 'r', 'r', '\0'};
+          doc["keys"]["player1"]["0"] = buf;
+        }
         preferences.putChar("key-player1-0", _p1_0);
         _KEY_0_P1 = _p1_0;
+      } else {
       }
 
       const char *p1_1 = doc["keys"]["player1"]["1"];
@@ -320,6 +328,22 @@ static int32_t onWrite(uint32_t lba, uint32_t offset, uint8_t *buffer,
         preferences.putChar("key-player2-9", _p2_9);
         _KEY_9_P2 = _p2_9;
       }
+
+      // if (millis() == 10000) {
+
+      //   char *out = (char *)msc_disk[lba];
+
+      //   const char *prefix = "//CONFIGX\n";
+
+      //   size_t prefixLen = strlen(prefix);
+
+      //   memcpy(out, prefix, prefixLen);
+
+      //   size_t jsonLen =
+      //       serializeJsonPretty(doc, out + prefixLen, 512 - prefixLen);
+      //   msc_disk[lba][jsonLen + prefixLen] = '\n';
+      // }
+      // break;
     }
   }
 
@@ -443,11 +467,20 @@ void writeFileOnBoot() {
       "                                                                        "
       "                                                                       "
       "                                                                        "
-      " ";
+      "                                                                       "
+      "                                                                     \n";
 
   memcpy(msc_disk[3], blank, FILE_SIZE);
-  size_t len = serializeJsonPretty(doc, (char *)msc_disk[3], 512);
-  msc_disk[3][len] = '\n';
+  char *out = (char *)msc_disk[3];
+
+  const char *prefix = "//CONFIG\n";
+
+  size_t prefixLen = strlen(prefix);
+
+  memcpy(out, prefix, prefixLen);
+
+  size_t jsonLen = serializeJsonPretty(doc, out + prefixLen, 512 - prefixLen);
+  msc_disk[3][jsonLen + prefixLen] = '\n';
   // memcpy(msc_disk[3], msg, strlen(msg));
 }
 
