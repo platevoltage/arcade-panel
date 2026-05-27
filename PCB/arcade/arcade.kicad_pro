@@ -69,8 +69,31 @@
           "thermal_relief_spoke_width": 0.5
         }
       },
-      "diff_pair_dimensions": [],
-      "drc_exclusions": [],
+      "diff_pair_dimensions": [
+        {
+          "gap": 0.0,
+          "via_gap": 0.0,
+          "width": 0.0
+        }
+      ],
+      "drc_exclusions": [
+        [
+          "hole_clearance|53211000|108061000|c3c8a195-71a0-4b85-aacd-82609c4031f6|bb9b63cc-45b9-46a0-a282-f7ce1a863abe",
+          ""
+        ],
+        [
+          "hole_clearance|53211000|108061000|ef6fec6d-a122-404b-9cd4-519cbe77d90f|bb9b63cc-45b9-46a0-a282-f7ce1a863abe",
+          ""
+        ],
+        [
+          "hole_clearance|59311000|108061000|45602700-2718-4054-bc17-58c37fb98a2c|e57afab6-3a60-49a9-b15c-b3d05ff94ccd",
+          ""
+        ],
+        [
+          "hole_clearance|59311000|108061000|793d1a7f-3670-43fe-a351-567a2f0eec3a|e57afab6-3a60-49a9-b15c-b3d05ff94ccd",
+          ""
+        ]
+      ],
       "meta": {
         "version": 2
       },
@@ -114,7 +137,7 @@
         "padstack": "warning",
         "pth_inside_courtyard": "ignore",
         "shorting_items": "error",
-        "silk_edge_clearance": "warning",
+        "silk_edge_clearance": "ignore",
         "silk_over_copper": "warning",
         "silk_overlap": "warning",
         "skew_out_of_range": "error",
@@ -203,7 +226,10 @@
           "td_width_to_size_filter_ratio": 0.9
         }
       ],
-      "track_widths": [],
+      "track_widths": [
+        0.0,
+        2.0
+      ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
           "corner_radius_percentage": 80,
@@ -230,7 +256,12 @@
           "spacing": 0.6
         }
       },
-      "via_dimensions": [],
+      "via_dimensions": [
+        {
+          "diameter": 0.0,
+          "drill": 0.0
+        }
+      ],
       "zones_allow_external_fillets": false
     },
     "ipc2581": {
@@ -661,7 +692,7 @@
         "uuid": "cc983bc6-e536-4497-b4ea-da3903beba0b"
       }
     ],
-    "used_designators": "J8-14",
+    "used_designators": "R6-9,H1-4,C3-5,C7-14,D1,Y1-2,J2-4,J8-16",
     "variants": []
   },
   "sheets": [
