@@ -1,34 +1,64 @@
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019 Ha Thach for Adafruit Industries
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
+#include "Storage.h"
 
-#ifndef RAMDISK_H_
-#define RAMDISK_H_
+Storage::Storage() {
+  // constructor body (can be empty)
+}
+
+Storage::~Storage() {}
+
+Adafruit_USBD_MSC Storage::usb_msc;
+
+// Callback invoked when received READ10 command.
+// Copy disk's data to buffer (up to bufsize) and
+// return number of copied bytes (must be multiple of block size)
+int32_t Storage::msc_read_callback(uint32_t lba, void *buffer,
+                                   uint32_t bufsize) {
+  uint8_t const *addr = msc_disk[lba];
+  memcpy(buffer, addr, bufsize);
+
+  return bufsize;
+}
+
+// Callback invoked when received WRITE10 command.
+// Process data in buffer to disk's storage and
+// return number of written bytes (must be multiple of block size)
+int32_t Storage::msc_write_callback(uint32_t lba, uint8_t *buffer,
+                                    uint32_t bufsize) {
+  uint8_t *addr = msc_disk[lba];
+  memcpy(addr, buffer, bufsize);
+
+  return bufsize;
+}
+
+// Callback invoked when WRITE10 command is completed (status received and
+// accepted by host). used to flush any pending cache.
+void Storage::msc_flush_callback(void) {
+  // nothing to do
+}
+
+bool Storage::msc_start_stop_callback(uint8_t power_condition, bool start,
+                                      bool load_eject) {
+  Serial.printf(
+      "Start/Stop callback: power condition %u, start %u, load_eject %u\n",
+      power_condition, start, load_eject);
+  return true;
+}
+
+// Invoked when received Test Unit Ready command.
+// return true allowing host to read/write this LUN e.g SD card inserted
+bool Storage::msc_ready_callback(void) {
+#ifdef BTN_EJECT
+  // button not active --> medium ready
+  return digitalRead(BTN_EJECT) != activeState;
+#else
+  return true;
+#endif
+}
 
 #define README_CONTENTS                                                        \
   "This is TinyUSB MassStorage device demo for Arduino on RAM disk."
 
-uint8_t msc_disk[DISK_BLOCK_NUM][DISK_BLOCK_SIZE] = {
+uint8_t Storage::msc_disk[DISK_BLOCK_NUM][DISK_BLOCK_SIZE] = {
     //------------- Block0: Boot Sector -------------//
     // byte_per_sector    = DISK_BLOCK_SIZE; fat12_sector_num_16  =
     // DISK_BLOCK_NUM; sector_per_cluster = 1; reserved_sectors = 1; fat_num =
@@ -122,4 +152,24 @@ uint8_t msc_disk[DISK_BLOCK_NUM][DISK_BLOCK_SIZE] = {
     //------------- Block3: Readme Content -------------//
     README_CONTENTS};
 
-#endif /* RAMDISK_H_ */
+void Storage::begin() {
+  if (!TinyUSBDevice.isInitialized()) {
+    TinyUSBDevice.begin(0);
+  }
+  // Set disk vendor id, product id and revision with string up to 8, 16, 4
+  // characters respectively
+  usb_msc.setID("Adafruit", "Mass Storage", "1.0");
+
+  // Set disk size
+  usb_msc.setCapacity(DISK_BLOCK_NUM, DISK_BLOCK_SIZE);
+
+  // Set callback
+  usb_msc.setReadWriteCallback(msc_read_callback, msc_write_callback,
+                               msc_flush_callback);
+  usb_msc.setStartStopCallback(msc_start_stop_callback);
+  usb_msc.setReadyCallback(msc_ready_callback);
+
+  // Set Lun ready (RAM disk is always ready)
+  usb_msc.setUnitReady(true);
+  usb_msc.begin();
+}
