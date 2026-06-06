@@ -69,14 +69,17 @@
           "thermal_relief_spoke_width": 0.5
         }
       },
-      "diff_pair_dimensions": [
-        {
-          "gap": 0.0,
-          "via_gap": 0.0,
-          "width": 0.0
-        }
+      "diff_pair_dimensions": [],
+      "drc_exclusions": [
+        [
+          "silk_edge_clearance|182015000|117337539|5652bab0-0736-4c44-be67-6d22fe3fcb0a|665e765d-0946-49b8-b52e-4c0d131501be",
+          ""
+        ],
+        [
+          "silk_edge_clearance|182122317|117445000|5652bab0-0736-4c44-be67-6d22fe3fcb0a|2995f0ac-6b0a-4faf-a21f-cd8919cfe318",
+          ""
+        ]
       ],
-      "drc_exclusions": [],
       "meta": {
         "version": 2
       },
@@ -90,7 +93,7 @@
         "creepage": "error",
         "diff_pair_gap_out_of_range": "error",
         "diff_pair_uncoupled_length_too_long": "error",
-        "drill_out_of_range": "ignore",
+        "drill_out_of_range": "error",
         "duplicate_footprints": "warning",
         "extra_footprint": "warning",
         "footprint": "error",
@@ -116,11 +119,11 @@
         "missing_tuning_profile": "warning",
         "net_conflict": "warning",
         "nonmirrored_text_on_back_layer": "warning",
-        "npth_inside_courtyard": "ignore",
+        "npth_inside_courtyard": "error",
         "padstack": "warning",
-        "pth_inside_courtyard": "ignore",
+        "pth_inside_courtyard": "error",
         "shorting_items": "error",
-        "silk_edge_clearance": "ignore",
+        "silk_edge_clearance": "warning",
         "silk_over_copper": "warning",
         "silk_overlap": "warning",
         "skew_out_of_range": "error",
@@ -159,7 +162,7 @@
         "min_text_height": 0.8,
         "min_text_thickness": 0.08,
         "min_through_hole_diameter": 0.3,
-        "min_track_width": 0.0,
+        "min_track_width": 0.2,
         "min_via_annular_width": 0.1,
         "min_via_diameter": 0.5,
         "solder_mask_to_copper_clearance": 0.0,
@@ -209,10 +212,7 @@
           "td_width_to_size_filter_ratio": 0.9
         }
       ],
-      "track_widths": [
-        0.0,
-        2.0
-      ],
+      "track_widths": [],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
           "corner_radius_percentage": 80,
@@ -239,12 +239,7 @@
           "spacing": 0.6
         }
       },
-      "via_dimensions": [
-        {
-          "diameter": 0.0,
-          "drill": 0.0
-        }
-      ],
+      "via_dimensions": [],
       "zones_allow_external_fillets": false
     },
     "ipc2581": {
@@ -463,7 +458,6 @@
       "footprint_filter": "ignore",
       "footprint_link_issues": "warning",
       "four_way_junction": "ignore",
-      "global_label_dangling": "warning",
       "ground_pin_not_ground": "warning",
       "hier_label_mismatch": "error",
       "isolated_pin_label": "warning",
@@ -503,7 +497,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "arcade.kicad_pro",
+    "filename": "stick.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -537,14 +531,10 @@
   },
   "pcbnew": {
     "last_paths": {
-      "gencad": "",
       "idf": "",
       "netlist": "",
       "plot": "",
-      "pos_files": "",
       "specctra_dsn": "",
-      "step": "",
-      "svg": "",
       "vrml": ""
     },
     "page_layout_descr_file": ""
@@ -655,33 +645,25 @@
     "meta": {
       "version": 1
     },
-    "net_format_name": "",
     "page_layout_descr_file": "",
     "plot_directory": "",
     "reuse_designators": true,
-    "space_save_all_events": true,
-    "spice_current_sheet_as_root": false,
-    "spice_external_command": "spice \"%I\"",
-    "spice_model_current_sheet_as_root": true,
-    "spice_save_all_currents": false,
-    "spice_save_all_dissipations": false,
-    "spice_save_all_voltages": false,
     "subpart_first_id": 65,
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "arcade.kicad_sch",
-        "name": "arcade",
-        "uuid": "cc983bc6-e536-4497-b4ea-da3903beba0b"
+        "filename": "stick.kicad_sch",
+        "name": "Root",
+        "uuid": "619ab13a-5323-4588-975f-35210db0c044"
       }
     ],
-    "used_designators": "R6-9,H1-4,D1,C3-5,C7-14,Y1-2,J2-4,J8-16",
+    "used_designators": "C1-8,R4-6,J1-2,U1,H1-4",
     "variants": []
   },
   "sheets": [
     [
-      "cc983bc6-e536-4497-b4ea-da3903beba0b",
-      "arcade"
+      "619ab13a-5323-4588-975f-35210db0c044",
+      "Root"
     ]
   ],
   "text_variables": {},
