@@ -5,6 +5,8 @@
 #define DISK_BLOCK_SIZE 512
 
 #include "Adafruit_TinyUSB.h"
+#include "KeyboardEmu.h"
+#include <ArduinoJson.h>
 // #include "ramdisk.h"
 
 class Storage {
@@ -30,6 +32,9 @@ private:
                                       bool load_eject);
   static bool msc_ready_callback(void);
   static uint8_t msc_disk[DISK_BLOCK_NUM][DISK_BLOCK_SIZE];
+
+  static void getValueWrite(char input, char *buf);
+  static void writeFileOnBoot();
 };
 
 extern Storage storage;
