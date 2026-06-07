@@ -32,4 +32,6 @@ private:
   static uint8_t msc_disk[DISK_BLOCK_NUM][DISK_BLOCK_SIZE];
 };
 
+extern Storage storage;
+
 #endif // STORAGE_H

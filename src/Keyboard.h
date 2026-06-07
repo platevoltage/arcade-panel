@@ -25,7 +25,6 @@ private:
   static bool activeState;
 };
 
-// extern Adafruit_USBD_HID player1;
-// extern Adafruit_USBD_HID player2;
+extern Keyboard keyboard;
 
 #endif // KEYBOARD_H

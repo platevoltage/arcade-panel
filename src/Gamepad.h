@@ -21,7 +21,6 @@ private:
   static const uint8_t desc_hid_report[];
 };
 
-// extern Adafruit_USBD_HID player1;
-// extern Adafruit_USBD_HID player2;
+extern Gamepad gamepad;
 
 #endif // GAMEPAD_H

@@ -3,12 +3,7 @@
 #include "Storage.h"
 #include <Arduino.h>
 
-Gamepad gamepad;
-Keyboard keyboard;
-Storage storage;
-
 void setup() {
-  //
   Serial.begin(115200);
   gamepad.begin();
   keyboard.begin();
@@ -16,7 +11,6 @@ void setup() {
 }
 
 void loop() {
-  //
   gamepad.task();
   keyboard.task();
 }
