@@ -7,6 +7,8 @@
 #include "Adafruit_TinyUSB.h"
 #include "Keyboard.h"
 #include <ArduinoJson.h>
+#include <LittleFS.h>
+
 // #include "ramdisk.h"
 
 class Storage {
@@ -19,6 +21,7 @@ public:
 
   // Member functions
   static void begin();
+  static void task();
   // static void task();
   static Adafruit_USBD_MSC usb_msc;
 
@@ -35,6 +38,8 @@ private:
 
   static void getValueWrite(char input, char *buf);
   static void writeFileOnBoot();
+  static char *find_config_file();
+  static void process_config();
 };
 
 extern Storage storage;

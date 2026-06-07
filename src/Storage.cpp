@@ -1,5 +1,9 @@
 #include "Storage.h"
 
+volatile uint32_t debug_lba;
+volatile uint32_t debug_len;
+volatile bool debug_flag = false;
+
 Storage::Storage() {
   // constructor body (can be empty)
 }
@@ -24,9 +28,23 @@ int32_t Storage::msc_read_callback(uint32_t lba, void *buffer,
 // return number of written bytes (must be multiple of block size)
 int32_t Storage::msc_write_callback(uint32_t lba, uint8_t *buffer,
                                     uint32_t bufsize) {
+
   uint8_t *addr = msc_disk[lba];
   memcpy(addr, buffer, bufsize);
 
+  debug_lba = lba;
+  debug_len = bufsize;
+  debug_flag = true;
+
+  // Serial.printf("WRITE LBA %lu\n", lba);
+
+  // for (int i = 0; i < 16; i++) {
+
+  //   char *data = (char *)msc_disk[i];
+  //   data[512 - 1] = '\0';
+  //   Serial.println(data);
+  // }
+  // process_config();
   return bufsize;
 }
 
@@ -152,6 +170,52 @@ uint8_t Storage::msc_disk[DISK_BLOCK_NUM][DISK_BLOCK_SIZE] = {
     //------------- Block3: Readme Content -------------//
     README_CONTENTS};
 
+// extremely simple FAT12/FAT32-safe hack:
+// just search raw disk for ASCII "config.txt"
+
+const char KEY[] = "config.jsn";
+
+char *Storage::find_config_file() {
+  for (int i = 0; i < DISK_BLOCK_NUM; i++) {
+    for (int j = 0; j < DISK_BLOCK_SIZE - 10; j++) {
+      if (memcmp(&msc_disk[i][j], KEY, sizeof(KEY) - 1) == 0) {
+        return (char *)&msc_disk[i][j];
+      }
+    }
+  }
+  return nullptr;
+}
+
+void Storage::process_config() {
+  // static bool dumped = false;
+  // if (dumped)
+  //   return;
+  // dumped = true;
+
+  Serial.println("\n--- MSC RAM DISK DUMP ---");
+
+  for (int i = 0; i < DISK_BLOCK_NUM; i++) {
+    bool printable_block = false;
+
+    for (int j = 0; j < DISK_BLOCK_SIZE; j++) {
+      uint8_t c = msc_disk[i][j];
+
+      if (c >= 32 && c <= 126) {
+        printable_block = true;
+        Serial.write(c);
+      } else if (c == 0x00 && printable_block) {
+        Serial.print("\n");
+        printable_block = false;
+      }
+    }
+
+    if (printable_block)
+      Serial.print("\n");
+  }
+
+  Serial.println("--- END DUMP ---\n");
+}
+
 void Storage::begin() {
   if (!TinyUSBDevice.isInitialized()) {
     TinyUSBDevice.begin(0);
@@ -172,4 +236,24 @@ void Storage::begin() {
   // Set Lun ready (RAM disk is always ready)
   usb_msc.setUnitReady(true);
   usb_msc.begin();
+}
+
+void Storage::task() {
+  if (debug_flag) {
+    debug_flag = false;
+    // Serial.printf("WRITE LBA %lu len %lu\n", debug_lba, debug_len);
+
+    // for (int i = 0; i < DISK_BLOCK_NUM; i++) {
+    //   char *data = (char *)msc_disk[i];
+    //   // if (debug_lba == 6) {
+    //   data[DISK_BLOCK_SIZE - 1] = '\0';
+    //   Serial.println(data);
+    //   // }
+    // }
+
+    process_config();
+  } else {
+    // Serial.println("nope");
+    // delay(500);
+  }
 }
