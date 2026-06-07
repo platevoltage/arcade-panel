@@ -1,5 +1,5 @@
-#ifndef KEYBOARDEMU_H
-#define KEYBOARDEMU_H
+#ifndef KEYBOARD_H
+#define KEYBOARD_H
 
 #include "Adafruit_TinyUSB.h"
 
@@ -137,13 +137,13 @@ struct KeyName {
   const char *name;
 };
 
-class KeyboardEmu {
+class Keyboard {
 public:
   // Constructor
-  KeyboardEmu();
+  Keyboard();
 
   // Destructor
-  ~KeyboardEmu();
+  ~Keyboard();
 
   // Member functions
   static void begin();
@@ -161,6 +161,6 @@ private:
   static bool activeState;
 };
 
-extern KeyboardEmu keyboard;
+extern Keyboard keyboard;
 
-#endif // KEYBOARDEMU_H
+#endif // KEYBOARD_H
