@@ -105,7 +105,7 @@ const KeyName Keyboard::keyMap[] = {{KEY_LEFT_CTRL, "KEY_LEFT_CTRL"},
                                     {KEY_RIGHT_ARROW, "KEY_RIGHT_ARROW"},
 
                                     {KEY_MENU, "KEY_MENU"},
-                                    // {KEY_SPACE, "KEY_SPACE"},
+                                    {KEY_SPACE, "KEY_SPACE"},
                                     {KEY_BACKSPACE, "KEY_BACKSPACE"},
                                     {KEY_TAB, "KEY_TAB"},
                                     {KEY_RETURN, "KEY_RETURN"},

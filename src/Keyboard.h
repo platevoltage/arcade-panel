@@ -21,6 +21,7 @@
 #define KEY_BACKSPACE 0xB2
 #define KEY_TAB 0xB3
 #define KEY_RETURN 0xB0
+#define KEY_SPACE 0x20
 #define KEY_MENU 0xED // "Keyboard Application" in USB standard
 #define KEY_ESC 0xB1
 #define KEY_INSERT 0xD1
