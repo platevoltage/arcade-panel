@@ -1,5 +1,14 @@
 {
-  "cSpell.words": ["CRGB", "deadzone", "gamepad", "Gamepad", "USBHID"],
+  "cSpell.words": [
+    "CRGB",
+    "deadzone",
+    "gamepad",
+    "Gamepad",
+    "hidcode",
+    "pincount",
+    "USBD",
+    "USBHID"
+  ],
   "files.associations": {
     "*.embeddedhtml": "html",
     "*.inc": "cpp",
