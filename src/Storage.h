@@ -6,6 +6,7 @@
 #include "hardware/flash.h"
 #include "hardware/irq.h"
 #include "hardware/sync.h"
+#include "pico/multicore.h"
 #include <ArduinoJson.h>
 
 // #include "ramdisk.h"
