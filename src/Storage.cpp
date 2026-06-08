@@ -442,7 +442,7 @@ void Storage::task() {
     // "TEST.TXT" → pad to "TEST    TXT"
     Serial.println(debugLBA);
     debugLBA = 0;
-    int32_t len = read_file("TEST    TXT", data, sizeof(data));
+    int32_t len = read_file("CONFIG  JSN", data, sizeof(data));
     if (len >= 0) {
       data[len] = '\0';
       Serial.println((char *)data);
@@ -470,12 +470,6 @@ int32_t Storage::msc_write_cb(uint32_t lba, uint8_t *buffer, uint32_t bufsize) {
     debugLBA = lba;
     debug = true;
   }
-
-  // debug = true;
-  // for (int i = 0; i < bufsize; i++) {
-  //   Serial.println(buffer[i]);
-  //   delay(10);
-  // }
   return bufsize;
 }
 
