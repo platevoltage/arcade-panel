@@ -232,6 +232,59 @@ bool Storage::is_formatted() {
   return p[510] == 0x55 && p[511] == 0xAA;
 }
 
+void Storage::createConfigFile() {
+  // const char *msg = "{}";
+  JsonDocument doc;
+
+  char buf[20] = {' ', '\0'};
+
+  keyboard.getValueWrite('z', buf);
+  doc["keys"]["player1"]["0"] = buf;
+  keyboard.getValueWrite('x', buf);
+  doc["keys"]["player1"]["1"] = buf;
+  keyboard.getValueWrite('q', buf);
+  doc["keys"]["player1"]["2"] = buf;
+  keyboard.getValueWrite('w', buf);
+  doc["keys"]["player1"]["3"] = buf;
+  keyboard.getValueWrite('a', buf);
+  doc["keys"]["player1"]["4"] = buf;
+  keyboard.getValueWrite('s', buf);
+  doc["keys"]["player1"]["5"] = buf;
+  keyboard.getValueWrite('1', buf);
+  doc["keys"]["player1"]["6"] = buf;
+  keyboard.getValueWrite('2', buf);
+  doc["keys"]["player1"]["7"] = buf;
+  keyboard.getValueWrite(KEY_SPACE, buf);
+  doc["keys"]["player1"]["8"] = buf;
+  keyboard.getValueWrite(KEY_RETURN, buf);
+  doc["keys"]["player1"]["9"] = buf;
+
+  keyboard.getValueWrite('t', buf);
+  doc["keys"]["player2"]["0"] = buf;
+  keyboard.getValueWrite('y', buf);
+  doc["keys"]["player2"]["1"] = buf;
+  keyboard.getValueWrite('u', buf);
+  doc["keys"]["player2"]["2"] = buf;
+  keyboard.getValueWrite('i', buf);
+  doc["keys"]["player2"]["3"] = buf;
+  keyboard.getValueWrite('o', buf);
+  doc["keys"]["player2"]["4"] = buf;
+  keyboard.getValueWrite('f', buf);
+  doc["keys"]["player2"]["5"] = buf;
+  keyboard.getValueWrite('3', buf);
+  doc["keys"]["player2"]["6"] = buf;
+  keyboard.getValueWrite('4', buf);
+  doc["keys"]["player2"]["7"] = buf;
+  keyboard.getValueWrite('g', buf);
+  doc["keys"]["player2"]["8"] = buf;
+  keyboard.getValueWrite('j', buf);
+  doc["keys"]["player2"]["9"] = buf;
+
+  char jsonBuf[2048];
+  size_t jsonLen = serializeJsonPretty(doc, jsonBuf);
+  write_file("CONFIG  JSN", (uint8_t *)jsonBuf, strlen(jsonBuf));
+}
+
 void Storage::format_fat16() {
   // uint8_t buf[BLOCK_SIZE];
   Serial.println("entered format_fat16");
@@ -349,8 +402,7 @@ void Storage::format_fat16() {
     flash_write_block(root_start + i, format_buf);
   }
 
-  const char *msg = "Hello from Pico!";
-  write_file("HELLO   TXT", (uint8_t *)msg, strlen(msg));
+  createConfigFile();
 }
 
 void Storage::begin() {

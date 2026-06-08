@@ -59,6 +59,7 @@ private:
   static void set_fat12_entry(uint8_t *fat, uint16_t cluster, uint16_t value);
   static int32_t write_file(const char *filename_8_3, const uint8_t *buf,
                             uint32_t size);
+  static void createConfigFile();
 };
 
 extern Storage storage;

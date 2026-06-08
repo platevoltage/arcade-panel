@@ -151,4 +151,16 @@ const KeyName Keyboard::keyMap[] = {{KEY_LEFT_CTRL, "KEY_LEFT_CTRL"},
                                     {KEY_SCROLL_LOCK, "KEY_SCROLL_LOCK"},
                                     {KEY_PAUSE, "KEY_PAUSE"}};
 
+void Keyboard::getValueWrite(char input, char *buf) {
+  for (int i = 0; i < keyMapSize; i++) {
+    if (input == keyMap[i].code) {
+      strcpy(buf, keyMap[i].name);
+      return;
+    }
+  }
+
+  buf[0] = input;
+  buf[1] = '\0';
+}
+
 const int Keyboard::keyMapSize = sizeof(keyMap) / sizeof(keyMap[0]);

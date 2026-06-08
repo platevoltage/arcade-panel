@@ -152,6 +152,7 @@ public:
   static Adafruit_USBD_HID keyboard;
   static const KeyName keyMap[];
   static const int keyMapSize;
+  static void getValueWrite(char input, char *buf);
 
 private:
   static const uint8_t desc_hid_report[];
