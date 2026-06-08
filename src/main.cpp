@@ -10,6 +10,9 @@ void setup() {
   gamepad.begin();
   keyboard.begin();
   storage.begin();
+  delay(5000);
+  Serial.print("Free stack: ");
+  Serial.println(rp2040.getFreeStack());
 }
 
 void loop() {
@@ -17,9 +20,14 @@ void loop() {
   keyboard.task();
   storage.task();
 }
-void setup1() { delay(5000); }
+
+// NO USB STUFF ON CORE 1
+void setup1() {
+  delay(5000);
+  //
+}
 void loop1() {
   // Serial.println(Serial.available());
-  // Serial.println("loop 1");
+  Serial.println("loop 1");
   delay(1500);
 }

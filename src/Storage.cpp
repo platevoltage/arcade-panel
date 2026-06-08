@@ -100,12 +100,14 @@ void Storage::flash_write_block(uint32_t lba, const uint8_t *buf) {
   memcpy(local_buf, (void *)(XIP_BASE + sector_addr), FLASH_SECTOR_SIZE);
   memcpy(local_buf + offset, buf, BLOCK_SIZE);
 
+  rp2040.idleOtherCore();
   irq_set_enabled(USBCTRL_IRQ, false);
   uint32_t ints = save_and_disable_interrupts();
   flash_range_erase(sector_addr, FLASH_SECTOR_SIZE);
   flash_range_program(sector_addr, local_buf, FLASH_SECTOR_SIZE);
   restore_interrupts(ints);
   irq_set_enabled(USBCTRL_IRQ, true);
+  rp2040.resumeOtherCore();
 }
 
 bool Storage::is_formatted() {
@@ -211,16 +213,16 @@ void Storage::format_fat16() {
   // --- Root directory (blocks 25-56) ---
   // First block has volume label entry
   memset(format_buf, 0, BLOCK_SIZE);
-  format_buf[0] = 'P';
-  format_buf[1] = 'I';
-  format_buf[2] = 'C';
-  format_buf[3] = 'O';
-  format_buf[4] = ' ';
-  format_buf[5] = 'F';
-  format_buf[6] = 'L';
-  format_buf[7] = 'A';
-  format_buf[8] = 'S';
-  format_buf[9] = 'H';
+  format_buf[0] = 'L';
+  format_buf[1] = 'A';
+  format_buf[2] = 'I';
+  format_buf[3] = 'K';
+  format_buf[4] = 'A';
+  format_buf[5] = ' ';
+  format_buf[6] = ' ';
+  format_buf[7] = ' ';
+  format_buf[8] = ' ';
+  format_buf[9] = ' ';
   format_buf[10] = ' ';
   format_buf[11] = 0x08; // ATTR_VOLUME_ID
   uint32_t root_start = RESERVED_SECTORS + NUM_FATS * SECTORS_PER_FAT;
