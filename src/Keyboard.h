@@ -153,6 +153,7 @@ public:
   static const KeyName keyMap[];
   static const int keyMapSize;
   static void getValueWrite(char input, char *buf);
+  static char getValueRead(const char *input);
 
 private:
   static const uint8_t desc_hid_report[];

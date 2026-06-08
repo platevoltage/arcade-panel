@@ -163,4 +163,19 @@ void Keyboard::getValueWrite(char input, char *buf) {
   buf[1] = '\0';
 }
 
+char Keyboard::getValueRead(const char *input) {
+  for (int i = 0; i < keyMapSize; i++) {
+    if (strcmp(keyMap[i].name, input) == 0) {
+      // strcpy(buf, keyMap[i].name);
+      return keyMap[i].code;
+    }
+  }
+  Serial.println(strlen(input));
+  if (strlen(input) == 1) {
+    return input[0];
+  } else {
+    return '\0';
+  }
+}
+
 const int Keyboard::keyMapSize = sizeof(keyMap) / sizeof(keyMap[0]);
