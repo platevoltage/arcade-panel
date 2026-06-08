@@ -54,6 +54,11 @@ private:
 
   static uint8_t format_buf[BLOCK_SIZE]; // replaces buf in format_fat16
   static uint8_t local_buf[FLASH_SECTOR_SIZE];
+
+  static uint16_t find_free_cluster(uint8_t *fat, uint16_t start_from = 2);
+  static void set_fat12_entry(uint8_t *fat, uint16_t cluster, uint16_t value);
+  static int32_t write_file(const char *filename_8_3, const uint8_t *buf,
+                            uint32_t size);
 };
 
 extern Storage storage;

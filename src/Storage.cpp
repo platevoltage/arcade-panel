@@ -36,6 +36,123 @@ uint8_t Storage::local_buf[FLASH_SECTOR_SIZE];
 #define DATA_START                                                             \
   (RESERVED_SECTORS + NUM_FATS * SECTORS_PER_FAT + ROOT_SECTORS)
 
+// Find a free cluster starting from cluster 2
+uint16_t Storage::find_free_cluster(uint8_t *fat, uint16_t start_from) {
+  for (uint16_t c = start_from; c < BLOCK_COUNT; c++) {
+    if (fat12_entry(fat, c) == 0x000)
+      return c;
+  }
+  return 0; // full
+}
+
+// Write a FAT12 entry
+void Storage::set_fat12_entry(uint8_t *fat, uint16_t cluster, uint16_t value) {
+  uint32_t offset = cluster + (cluster / 2);
+  if (cluster & 1) {
+    fat[offset] = (fat[offset] & 0x0F) | ((value & 0x0F) << 4);
+    fat[offset + 1] = (value >> 4) & 0xFF;
+  } else {
+    fat[offset] = value & 0xFF;
+    fat[offset + 1] = (fat[offset + 1] & 0xF0) | ((value >> 8) & 0x0F);
+  }
+}
+
+int32_t Storage::write_file(const char *filename_8_3, const uint8_t *buf,
+                            uint32_t size) {
+  // Load FAT into RAM so we can modify it
+  static uint8_t fat_buf[SECTORS_PER_FAT * BLOCK_SIZE];
+  memcpy(fat_buf,
+         (void *)(XIP_BASE + FS_OFFSET + RESERVED_SECTORS * BLOCK_SIZE),
+         SECTORS_PER_FAT * BLOCK_SIZE);
+
+  // Allocate clusters and build chain
+  uint32_t clusters_needed = (size + SECTORS_PER_CLUS * BLOCK_SIZE - 1) /
+                             (SECTORS_PER_CLUS * BLOCK_SIZE);
+  uint16_t first_cluster = 0;
+  uint16_t prev_cluster = 0;
+
+  for (uint32_t i = 0; i < clusters_needed; i++) {
+    uint16_t c =
+        find_free_cluster(fat_buf, prev_cluster ? prev_cluster + 1 : 2);
+    if (c == 0) {
+      Serial.println("Disk full");
+      return -1;
+    }
+    if (i == 0)
+      first_cluster = c;
+    if (prev_cluster)
+      set_fat12_entry(fat_buf, prev_cluster, c);
+    set_fat12_entry(fat_buf, c, 0xFFF); // end of chain for now
+    prev_cluster = c;
+  }
+
+  // Write data clusters
+  uint32_t remaining = size;
+  uint16_t cluster = first_cluster;
+  uint32_t buf_offset = 0;
+  while (remaining > 0) {
+    uint32_t sector = DATA_START + (cluster - 2) * SECTORS_PER_CLUS;
+    uint8_t block[BLOCK_SIZE];
+    uint32_t chunkSize = min(remaining, (uint32_t)BLOCK_SIZE);
+    memcpy(block, buf + buf_offset, chunkSize);
+    if (chunkSize < BLOCK_SIZE)
+      memset(block + chunkSize, 0, BLOCK_SIZE - chunkSize);
+    flash_write_block(sector, block);
+    buf_offset += chunkSize;
+    remaining -= chunkSize;
+    cluster = fat12_entry(fat_buf, cluster);
+  }
+
+  // Write FAT1 and FAT2 back to flash
+  for (int i = 0; i < SECTORS_PER_FAT; i++) {
+    flash_write_block(RESERVED_SECTORS + i, fat_buf + i * BLOCK_SIZE);
+    flash_write_block(RESERVED_SECTORS + SECTORS_PER_FAT + i,
+                      fat_buf + i * BLOCK_SIZE);
+  }
+
+  // Find empty directory slot and write entry
+  uint32_t root_start = RESERVED_SECTORS + NUM_FATS * SECTORS_PER_FAT;
+  for (int e = 0; e < ROOT_ENTRIES; e++) {
+    uint32_t entry_sector = root_start + (e * 32) / BLOCK_SIZE;
+    uint32_t entry_offset = (e * 32) % BLOCK_SIZE;
+
+    uint8_t *entry_ptr = (uint8_t *)(XIP_BASE + FS_OFFSET +
+                                     entry_sector * BLOCK_SIZE + entry_offset);
+    if (entry_ptr[0] == 0x00 || entry_ptr[0] == 0xE5) {
+      // Read the sector, patch in the entry, write it back
+      uint8_t dir_block[BLOCK_SIZE];
+      memcpy(dir_block,
+             (void *)(XIP_BASE + FS_OFFSET + entry_sector * BLOCK_SIZE),
+             BLOCK_SIZE);
+      uint8_t *entry = dir_block + entry_offset;
+
+      memcpy(entry, filename_8_3, 11);
+      entry[11] = 0x20; // ATTR_ARCHIVE
+      memset(entry + 12, 0, 20);
+
+      uint16_t date = ((2025 - 1980) << 9) | (1 << 5) | 1; // 2025-01-01
+      uint16_t time = (12 << 11) | (0 << 5) | 0;           // 12:00:00
+
+      entry[22] = time & 0xFF;
+      entry[23] = (time >> 8) & 0xFF;
+      entry[24] = date & 0xFF;
+      entry[25] = (date >> 8) & 0xFF;
+      entry[26] = first_cluster & 0xFF;
+      entry[27] = (first_cluster >> 8) & 0xFF;
+      entry[28] = size & 0xFF;
+      entry[29] = (size >> 8) & 0xFF;
+      entry[30] = (size >> 16) & 0xFF;
+      entry[31] = (size >> 24) & 0xFF;
+
+      flash_write_block(entry_sector, dir_block);
+      return size;
+    }
+  }
+
+  Serial.println("Root directory full");
+  return -1;
+}
+
 uint16_t Storage::fat12_entry(uint8_t *fat, uint16_t cluster) {
   uint32_t offset = cluster + (cluster / 2);
   uint16_t val = fat[offset] | (fat[offset + 1] << 8);
@@ -231,6 +348,9 @@ void Storage::format_fat16() {
   for (uint32_t i = 1; i < ROOT_SECTORS; i++) {
     flash_write_block(root_start + i, format_buf);
   }
+
+  const char *msg = "Hello from Pico!";
+  write_file("HELLO   TXT", (uint8_t *)msg, strlen(msg));
 }
 
 void Storage::begin() {
