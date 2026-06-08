@@ -21,7 +21,7 @@ Adafruit_USBD_MSC Storage::usb_msc;
 // #define ROOT_SECTORS ((ROOT_ENTRIES * 32) / BLOCK_SIZE) // 32
 // #define SECTORS_PER_CLUS 1
 
-// uint8_t Storage::sector_buf[FLASH_SECTOR_SIZE];
+uint8_t Storage::sector_buf[FLASH_SECTOR_SIZE];
 // int32_t Storage::msc_read_cb(uint32_t lba, void *buffer, uint32_t bufsize);
 // int32_t Storage::msc_write_cb(uint32_t lba, uint8_t *buffer, uint32_t
 // bufsize); void Storage::msc_flush_cb(void);
@@ -30,9 +30,8 @@ bool Storage::debug = false;
 bool Storage::debugLBA = 0;
 uint32_t Storage::last_write_ms = 0;
 
-uint8_t format_buf[BLOCK_SIZE]; // replaces buf in format_fat16
-uint8_t local_buf[FLASH_SECTOR_SIZE];
-uint8_t sector_buf[FLASH_SECTOR_SIZE];
+uint8_t Storage::format_buf[BLOCK_SIZE]; // replaces buf in format_fat16
+uint8_t Storage::local_buf[FLASH_SECTOR_SIZE];
 
 #define DATA_START                                                             \
   (RESERVED_SECTORS + NUM_FATS * SECTORS_PER_FAT + ROOT_SECTORS)

@@ -37,7 +37,7 @@ public:
 
 private:
   static Adafruit_USBD_MSC usb_msc;
-  // static uint8_t sector_buf[FLASH_SECTOR_SIZE];
+  static uint8_t sector_buf[FLASH_SECTOR_SIZE];
   static int32_t msc_read_cb(uint32_t lba, void *buffer, uint32_t bufsize);
   static int32_t msc_write_cb(uint32_t lba, uint8_t *buffer, uint32_t bufsize);
   static void msc_flush_cb(void);
@@ -51,8 +51,8 @@ private:
   static bool is_formatted();
   static void format_fat16();
 
-  // uint8_t format_buf[BLOCK_SIZE]; // replaces buf in format_fat16
-  // uint8_t local_buf[FLASH_SECTOR_SIZE];
+  static uint8_t format_buf[BLOCK_SIZE]; // replaces buf in format_fat16
+  static uint8_t local_buf[FLASH_SECTOR_SIZE];
 };
 
 extern Storage storage;
