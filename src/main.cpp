@@ -3,7 +3,6 @@
 #include "Storage.h"
 #include <Arduino.h>
 
-// bool core1_disable_systick = true;
 bool core1_separate_stack = true;
 
 void setup() {
