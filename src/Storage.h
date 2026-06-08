@@ -24,6 +24,8 @@
 #define ROOT_SECTORS ((ROOT_ENTRIES * 32) / BLOCK_SIZE) // 32
 #define SECTORS_PER_CLUS 1
 
+#define RAM_DISK_BLOCKS 32 // 16KB, adjust as needed
+
 class Storage {
 public:
   // Constructor
@@ -60,6 +62,12 @@ private:
   static int32_t write_file(const char *filename_8_3, const uint8_t *buf,
                             uint32_t size);
   static void createConfigFile();
+  static uint8_t ram_disk[RAM_DISK_BLOCKS * BLOCK_SIZE];
+  static int32_t msc_ram_read_cb(uint32_t lba, void *buffer, uint32_t bufsize);
+  static int32_t msc_ram_write_cb(uint32_t lba, uint8_t *buffer,
+                                  uint32_t bufsize);
+  static void msc_ram_flush_cb(void);
+  static void format_ram_disk();
 };
 
 extern Storage storage;

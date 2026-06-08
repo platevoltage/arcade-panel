@@ -405,6 +405,59 @@ void Storage::format_fat16() {
   createConfigFile();
 }
 
+uint8_t Storage::ram_disk[RAM_DISK_BLOCKS * BLOCK_SIZE];
+
+int32_t Storage::msc_ram_read_cb(uint32_t lba, void *buffer, uint32_t bufsize) {
+  memcpy(buffer, ram_disk + lba * BLOCK_SIZE, bufsize);
+  return bufsize;
+}
+
+int32_t Storage::msc_ram_write_cb(uint32_t lba, uint8_t *buffer,
+                                  uint32_t bufsize) {
+  memcpy(ram_disk + lba * BLOCK_SIZE, buffer, bufsize);
+  return bufsize;
+}
+
+void Storage::msc_ram_flush_cb(void) {}
+
+void Storage::format_ram_disk() {
+  memset(ram_disk, 0, sizeof(ram_disk));
+  uint8_t *buf = ram_disk;
+
+  // boot sector
+  buf[0] = 0xEB;
+  buf[1] = 0x3C;
+  buf[2] = 0x90;
+  buf[11] = 0x00;
+  buf[12] = 0x02;            // bytes per sector
+  buf[13] = 1;               // sectors per cluster
+  buf[14] = 1;               // reserved sectors
+  buf[16] = 2;               // num FATs
+  buf[17] = 16;              // root entries
+  buf[19] = RAM_DISK_BLOCKS; // total sectors
+  buf[21] = 0xF8;            // media type
+  buf[22] = 1;               // sectors per FAT
+  buf[510] = 0x55;
+  buf[511] = 0xAA;
+
+  // FAT1
+  uint8_t *fat1 = ram_disk + BLOCK_SIZE;
+  fat1[0] = 0xF8;
+  fat1[1] = 0xFF;
+  fat1[2] = 0xFF;
+
+  // FAT2
+  uint8_t *fat2 = ram_disk + 2 * BLOCK_SIZE;
+  fat2[0] = 0xF8;
+  fat2[1] = 0xFF;
+  fat2[2] = 0xFF;
+
+  // volume label in root directory
+  uint8_t *root = ram_disk + 3 * BLOCK_SIZE;
+  memcpy(root, "LAIKA TEMP ", 11); // 11 chars, space padded
+  root[11] = 0x08;                 // ATTR_VOLUME_ID
+}
+
 void Storage::begin() {
   delay(3000);
   Serial.println("Starting...");
@@ -416,10 +469,22 @@ void Storage::begin() {
     Serial.println("Already formatted");
   }
 
-  usb_msc.setID("RaspberryPi", "Pico Flash", "1.0");
-  usb_msc.setCapacity(BLOCK_COUNT, BLOCK_SIZE);
-  usb_msc.setReadWriteCallback(msc_read_cb, msc_write_cb, msc_flush_cb);
-  usb_msc.setUnitReady(true);
+  format_ram_disk();
+
+  // usb_msc.setID("RaspberryPi", "Pico Flash", "1.0");
+  // usb_msc.setCapacity(BLOCK_COUNT, BLOCK_SIZE);
+  // usb_msc.setReadWriteCallback(msc_read_cb, msc_write_cb, msc_flush_cb);
+  // usb_msc.setUnitReady(true);
+  usb_msc.setMaxLun(2);
+  usb_msc.setID(0, "RaspberryPi", "Pico Flash", "1.0");
+  usb_msc.setID(1, "RaspberryPi", "Pico RAM", "1.0");
+  usb_msc.setCapacity(0, BLOCK_COUNT, BLOCK_SIZE);
+  usb_msc.setCapacity(1, RAM_DISK_BLOCKS, BLOCK_SIZE);
+  usb_msc.setReadWriteCallback(0, msc_read_cb, msc_write_cb, msc_flush_cb);
+  usb_msc.setReadWriteCallback(1, msc_ram_read_cb, msc_ram_write_cb,
+                               msc_ram_flush_cb);
+  usb_msc.setUnitReady(0, true);
+  usb_msc.setUnitReady(1, true);
   usb_msc.begin();
 
   if (TinyUSBDevice.mounted()) {
