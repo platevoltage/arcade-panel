@@ -8,9 +8,9 @@
 
 void setup() {
   Serial.begin(115200);
-  gamepad.begin();
-  keyboard.begin();
-  // storage.begin();
+  // gamepad.begin();
+  // keyboard.begin();
+  storage.begin();
 }
 
 void loop() {

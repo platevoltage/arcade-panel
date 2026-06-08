@@ -1,15 +1,27 @@
 #ifndef STORAGE_H
 #define STORAGE_H
 
-#define DISK_BLOCK_NUM 16
-#define DISK_BLOCK_SIZE 512
-
 #include "Adafruit_TinyUSB.h"
 #include "Keyboard.h"
+#include "hardware/flash.h"
+#include "hardware/irq.h"
+#include "hardware/sync.h"
 #include <ArduinoJson.h>
-#include <LittleFS.h>
 
 // #include "ramdisk.h"
+
+#define FLASH_TOTAL (2 * 1024 * 1024UL)
+#define FS_SIZE (1536 * 1024UL)
+#define FS_OFFSET (FLASH_TOTAL - FS_SIZE)
+#define BLOCK_SIZE 512
+#define BLOCK_COUNT (FS_SIZE / BLOCK_SIZE) // 3072
+
+#define RESERVED_SECTORS 1
+#define NUM_FATS 2
+#define SECTORS_PER_FAT 12
+#define ROOT_ENTRIES 512
+#define ROOT_SECTORS ((ROOT_ENTRIES * 32) / BLOCK_SIZE) // 32
+#define SECTORS_PER_CLUS 1
 
 class Storage {
 public:
@@ -22,24 +34,25 @@ public:
   // Member functions
   static void begin();
   static void task();
-  // static void task();
-  static Adafruit_USBD_MSC usb_msc;
 
 private:
-  static int32_t msc_read_callback(uint32_t lba, void *buffer,
-                                   uint32_t bufsize);
-  static int32_t msc_write_callback(uint32_t lba, uint8_t *buffer,
-                                    uint32_t bufsize);
-  static void msc_flush_callback(void);
-  static bool msc_start_stop_callback(uint8_t power_condition, bool start,
-                                      bool load_eject);
-  static bool msc_ready_callback(void);
-  static uint8_t msc_disk[DISK_BLOCK_NUM][DISK_BLOCK_SIZE];
+  static Adafruit_USBD_MSC usb_msc;
+  // static uint8_t sector_buf[FLASH_SECTOR_SIZE];
+  static int32_t msc_read_cb(uint32_t lba, void *buffer, uint32_t bufsize);
+  static int32_t msc_write_cb(uint32_t lba, uint8_t *buffer, uint32_t bufsize);
+  static void msc_flush_cb(void);
+  static bool debug;
+  static bool debugLBA;
+  static uint32_t last_write_ms;
+  static uint16_t fat12_entry(uint8_t *fat, uint16_t cluster);
+  static int32_t read_file(const char *filename_8_3, uint8_t *buf,
+                           uint32_t maxLen);
+  static void flash_write_block(uint32_t lba, const uint8_t *buf);
+  static bool is_formatted();
+  static void format_fat16();
 
-  static void getValueWrite(char input, char *buf);
-  static void writeFileOnBoot();
-  static char *find_config_file();
-  static void process_config();
+  // uint8_t format_buf[BLOCK_SIZE]; // replaces buf in format_fat16
+  // uint8_t local_buf[FLASH_SECTOR_SIZE];
 };
 
 extern Storage storage;
