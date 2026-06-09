@@ -27,6 +27,7 @@ uint8_t Storage::sector_buf[FLASH_SECTOR_SIZE];
 // bufsize); void Storage::msc_flush_cb(void);
 
 bool Storage::debug = false;
+bool Storage::isRam = false;
 bool Storage::debugLBA = 0;
 uint32_t Storage::last_write_ms = 0;
 
@@ -163,11 +164,21 @@ uint16_t Storage::fat12_entry(uint8_t *fat, uint16_t cluster) {
 }
 
 int32_t Storage::read_file(const char *filename_8_3, uint8_t *buf,
-                           uint32_t maxLen) {
-  uint32_t root_start = RESERVED_SECTORS + NUM_FATS * SECTORS_PER_FAT;
-  uint8_t *root = (uint8_t *)(XIP_BASE + FS_OFFSET + root_start * BLOCK_SIZE);
-  uint8_t *fat =
-      (uint8_t *)(XIP_BASE + FS_OFFSET + RESERVED_SECTORS * BLOCK_SIZE);
+                           uint32_t maxLen, bool fromRam = false) {
+  uint8_t *root;
+  uint8_t *fat;
+  uint32_t data_start;
+
+  if (fromRam) {
+    root = ram_disk + 3 * BLOCK_SIZE; // root dir at sector 3
+    fat = ram_disk + 1 * BLOCK_SIZE;  // FAT1 at sector 1
+    data_start = 4;                   // boot + FAT1 + FAT2 + root
+  } else {
+    uint32_t root_start = RESERVED_SECTORS + NUM_FATS * SECTORS_PER_FAT;
+    root = (uint8_t *)(XIP_BASE + FS_OFFSET + root_start * BLOCK_SIZE);
+    fat = (uint8_t *)(XIP_BASE + FS_OFFSET + RESERVED_SECTORS * BLOCK_SIZE);
+    data_start = DATA_START;
+  }
 
   for (int e = 0; e < ROOT_ENTRIES; e++) {
     uint8_t *entry = root + e * 32;
@@ -192,8 +203,11 @@ int32_t Storage::read_file(const char *filename_8_3, uint8_t *buf,
         if (cluster < 2 || cluster >= 0xFF8)
           break;
 
-        uint32_t sector = DATA_START + (cluster - 2) * SECTORS_PER_CLUS;
-        uint8_t *src = (uint8_t *)(XIP_BASE + FS_OFFSET + sector * BLOCK_SIZE);
+        uint32_t sector = data_start + (cluster - 2) * SECTORS_PER_CLUS;
+        uint8_t *src =
+            fromRam ? ram_disk + sector * BLOCK_SIZE
+                    : (uint8_t *)(XIP_BASE + FS_OFFSET + sector * BLOCK_SIZE);
+
         uint32_t chunkSize =
             min((uint32_t)(SECTORS_PER_CLUS * BLOCK_SIZE), toRead - offset);
         memcpy(buf + offset, src, chunkSize);
@@ -207,6 +221,53 @@ int32_t Storage::read_file(const char *filename_8_3, uint8_t *buf,
   }
   return -1;
 }
+
+// int32_t Storage::read_file(const char *filename_8_3, uint8_t *buf,
+//                            uint32_t maxLen) {
+//   uint32_t root_start = RESERVED_SECTORS + NUM_FATS * SECTORS_PER_FAT;
+//   uint8_t *root = (uint8_t *)(XIP_BASE + FS_OFFSET + root_start *
+//   BLOCK_SIZE); uint8_t *fat =
+//       (uint8_t *)(XIP_BASE + FS_OFFSET + RESERVED_SECTORS * BLOCK_SIZE);
+
+//   for (int e = 0; e < ROOT_ENTRIES; e++) {
+//     uint8_t *entry = root + e * 32;
+//     if (entry[0] == 0x00)
+//       break;
+//     if (entry[0] == 0xE5)
+//       continue;
+//     if (entry[11] & 0x08)
+//       continue;
+//     if (entry[11] & 0x10)
+//       continue;
+
+//     if (memcmp(entry, filename_8_3, 11) == 0) {
+//       uint16_t cluster = entry[26] | (entry[27] << 8);
+//       uint32_t size =
+//           entry[28] | (entry[29] << 8) | (entry[30] << 16) | (entry[31] <<
+//           24);
+
+//       uint32_t toRead = min(size, maxLen);
+//       uint32_t offset = 0;
+
+//       while (offset < toRead) {
+//         if (cluster < 2 || cluster >= 0xFF8)
+//           break;
+
+//         uint32_t sector = DATA_START + (cluster - 2) * SECTORS_PER_CLUS;
+//         uint8_t *src = (uint8_t *)(XIP_BASE + FS_OFFSET + sector *
+//         BLOCK_SIZE); uint32_t chunkSize =
+//             min((uint32_t)(SECTORS_PER_CLUS * BLOCK_SIZE), toRead - offset);
+//         memcpy(buf + offset, src, chunkSize);
+//         offset += chunkSize;
+
+//         cluster = fat12_entry(fat, cluster);
+//       }
+
+//       return size;
+//     }
+//   }
+//   return -1;
+// }
 
 void Storage::flash_write_block(uint32_t lba, const uint8_t *buf) {
   uint32_t flash_addr = FS_OFFSET + lba * BLOCK_SIZE;
@@ -415,6 +476,12 @@ int32_t Storage::msc_ram_read_cb(uint32_t lba, void *buffer, uint32_t bufsize) {
 int32_t Storage::msc_ram_write_cb(uint32_t lba, uint8_t *buffer,
                                   uint32_t bufsize) {
   memcpy(ram_disk + lba * BLOCK_SIZE, buffer, bufsize);
+  // if (lba >= DATA_START) {
+  last_write_ms = millis();
+  debugLBA = lba;
+  debug = true;
+  isRam = true;
+  // }
   return bufsize;
 }
 
@@ -471,10 +538,6 @@ void Storage::begin() {
 
   format_ram_disk();
 
-  // usb_msc.setID("RaspberryPi", "Pico Flash", "1.0");
-  // usb_msc.setCapacity(BLOCK_COUNT, BLOCK_SIZE);
-  // usb_msc.setReadWriteCallback(msc_read_cb, msc_write_cb, msc_flush_cb);
-  // usb_msc.setUnitReady(true);
   usb_msc.setMaxLun(2);
   usb_msc.setID(0, "RaspberryPi", "Pico Flash", "1.0");
   usb_msc.setID(1, "RaspberryPi", "Pico RAM", "1.0");
@@ -507,7 +570,8 @@ void Storage::task() {
     // "TEST.TXT" → pad to "TEST    TXT"
     Serial.println(debugLBA);
     debugLBA = 0;
-    int32_t len = read_file("CONFIG  JSN", data, sizeof(data));
+    int32_t len = read_file("CONFIG  JSN", data, sizeof(data), isRam);
+    isRam = false;
     if (len >= 0) {
       data[len] = '\0';
       Serial.println((char *)data);

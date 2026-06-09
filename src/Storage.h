@@ -45,11 +45,12 @@ private:
   static int32_t msc_write_cb(uint32_t lba, uint8_t *buffer, uint32_t bufsize);
   static void msc_flush_cb(void);
   static bool debug;
+  static bool isRam;
   static bool debugLBA;
   static uint32_t last_write_ms;
   static uint16_t fat12_entry(uint8_t *fat, uint16_t cluster);
   static int32_t read_file(const char *filename_8_3, uint8_t *buf,
-                           uint32_t maxLen);
+                           uint32_t maxLen, bool fromRam);
   static void flash_write_block(uint32_t lba, const uint8_t *buf);
   static bool is_formatted();
   static void format_fat16();
