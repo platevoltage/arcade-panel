@@ -6,11 +6,14 @@ Gamepad::Gamepad() {
 
 Gamepad::~Gamepad() {}
 
-Adafruit_USBD_HID Gamepad::player1;
-Adafruit_USBD_HID Gamepad::player2;
+// Adafruit_USBD_HID Gamepad::player1;
+// Adafruit_USBD_HID Gamepad::player2;
+
+Gamepad player1;
+Gamepad player2;
 
 hid_gamepad_report_t gp;
-hid_gamepad_report_t gp2;
+// hid_gamepad_report_t gp2;
 
 uint8_t const Gamepad::desc_hid_report[] = {TUD_HID_REPORT_DESC_GAMEPAD()};
 
@@ -20,19 +23,19 @@ void Gamepad::begin() {
   }
   Serial.println("Gamepad begin");
 
-  player2.setPollInterval(2);
-  player2.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
-  player2.begin();
+  // player2.setPollInterval(2);
+  // player2.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
+  // player2.begin();
 
-  player1.setPollInterval(2);
-  player1.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
-  player1.begin();
+  player.setPollInterval(2);
+  player.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
+  player.begin();
 
   //
 }
 
 void Gamepad::task() {
-  if (!player1.ready() || !player2.ready())
+  if (!player.ready())
     return;
   // Serial.println("Gamepad task");
   // Serial.println("No pressing buttons");

@@ -8,7 +8,11 @@ bool core1_separate_stack = true;
 
 void setup() {
   Serial.begin(115200);
-  gamepad.begin();
+  USBDevice.setManufacturerDescriptor("Laika");
+  USBDevice.setProductDescriptor("Arcade Panel");
+
+  player1.begin();
+  player2.begin();
   keyboard.begin();
   storage.begin();
   delay(5000);
@@ -17,8 +21,8 @@ void setup() {
 }
 
 void loop() {
-  gamepad.task();
-  keyboard.task();
+  player1.task();
+  player2.task();
   storage.task();
   serialReader.task();
 }
