@@ -63,9 +63,9 @@ private:
   CRGB leds[24];
   CRGB onboardLed[1];
 
-  Adafruit_TLC5947 buttonLights =
-      Adafruit_TLC5947(NUM_TLC5947, BUTTON_LIGHTS_CLOCK_PIN,
-                       BUTTON_LIGHTS_DATA_PIN, BUTTON_LIGHTS_LATCH_PIN);
+  //   Adafruit_TLC5947 buttonLights =
+  //       Adafruit_TLC5947(NUM_TLC5947, BUTTON_LIGHTS_CLOCK_PIN,
+  //                        BUTTON_LIGHTS_DATA_PIN, BUTTON_LIGHTS_LATCH_PIN);
 
   static bool buttonLightsStarted;
 };

@@ -30,7 +30,7 @@ void setup1() {
   //
 }
 void loop1() {
-  // Serial.println(Serial.available());
+  // Serial.println(Serial.available());2
   // Serial.println("loop 1");
   delay(1500);
 }
