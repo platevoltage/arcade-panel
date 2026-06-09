@@ -1,7 +1,7 @@
 #include "Gamepad.h"
 #include "Keyboard.h"
+#include "SerialReader.h"
 #include "Storage.h"
-#include <Arduino.h>
 
 bool core1_separate_stack = true;
 
@@ -19,6 +19,7 @@ void loop() {
   gamepad.task();
   keyboard.task();
   storage.task();
+  serialReader.task();
 }
 
 // NO USB STUFF ON CORE 1
@@ -28,6 +29,6 @@ void setup1() {
 }
 void loop1() {
   // Serial.println(Serial.available());
-  Serial.println("loop 1");
+  // Serial.println("loop 1");
   delay(1500);
 }

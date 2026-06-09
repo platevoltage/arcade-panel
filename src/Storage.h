@@ -37,6 +37,8 @@ public:
   // Member functions
   static void begin();
   static void task();
+  static int32_t write_ram_file(const char *filename_8_3, const uint8_t *buf,
+                                uint32_t size);
 
 private:
   static Adafruit_USBD_MSC usb_msc;
@@ -62,8 +64,8 @@ private:
   static void set_fat12_entry(uint8_t *fat, uint16_t cluster, uint16_t value);
   static int32_t write_file(const char *filename_8_3, const uint8_t *buf,
                             uint32_t size);
-  static int32_t write_ram_file(const char *filename_8_3, const uint8_t *buf,
-                                uint32_t size);
+  // static int32_t write_ram_file(const char *filename_8_3, const uint8_t *buf,
+  //                               uint32_t size);
   static void createConfigFile();
   static uint8_t ram_disk[RAM_DISK_BLOCKS * BLOCK_SIZE];
   static int32_t msc_ram_read_cb(uint32_t lba, void *buffer, uint32_t bufsize);
