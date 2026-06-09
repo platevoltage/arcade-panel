@@ -154,6 +154,71 @@ int32_t Storage::write_file(const char *filename_8_3, const uint8_t *buf,
   return -1;
 }
 
+int32_t Storage::write_ram_file(const char *filename_8_3, const uint8_t *buf,
+                                uint32_t size) {
+  uint8_t *fat = ram_disk + 1 * BLOCK_SIZE;
+  uint8_t *root = ram_disk + 3 * BLOCK_SIZE;
+  uint32_t data_start = 4;
+
+  // find free cluster
+  uint32_t clusters_needed = (size + BLOCK_SIZE - 1) / BLOCK_SIZE;
+  uint16_t first_cluster = 0;
+  uint16_t prev_cluster = 0;
+
+  for (uint32_t i = 0; i < clusters_needed; i++) {
+    uint16_t c = 0;
+    for (uint16_t j = 2; j < RAM_DISK_BLOCKS; j++) {
+      if (fat12_entry(fat, j) == 0x000) {
+        c = j;
+        break;
+      }
+    }
+    if (c == 0) {
+      Serial.println("RAM disk full");
+      return -1;
+    }
+    if (i == 0)
+      first_cluster = c;
+    if (prev_cluster)
+      set_fat12_entry(fat, prev_cluster, c);
+    set_fat12_entry(fat, c, 0xFFF);
+    prev_cluster = c;
+  }
+
+  // write data
+  uint16_t cluster = first_cluster;
+  uint32_t offset = 0;
+  uint32_t remaining = size;
+  while (remaining > 0 && cluster >= 2 && cluster < 0xFF8) {
+    uint32_t sector = data_start + (cluster - 2);
+    uint32_t chunkSize = min(remaining, (uint32_t)BLOCK_SIZE);
+    memcpy(ram_disk + sector * BLOCK_SIZE, buf + offset, chunkSize);
+    offset += chunkSize;
+    remaining -= chunkSize;
+    cluster = fat12_entry(fat, cluster);
+  }
+
+  // find empty directory slot
+  for (int e = 0; e < 16; e++) {
+    uint8_t *entry = root + e * 32;
+    if (entry[0] == 0x00 || entry[0] == 0xE5) {
+      memcpy(entry, filename_8_3, 11);
+      entry[11] = 0x20; // ATTR_ARCHIVE
+      memset(entry + 12, 0, 20);
+      entry[26] = first_cluster & 0xFF;
+      entry[27] = (first_cluster >> 8) & 0xFF;
+      entry[28] = size & 0xFF;
+      entry[29] = (size >> 8) & 0xFF;
+      entry[30] = (size >> 16) & 0xFF;
+      entry[31] = (size >> 24) & 0xFF;
+      return size;
+    }
+  }
+
+  Serial.println("RAM root directory full");
+  return -1;
+}
+
 uint16_t Storage::fat12_entry(uint8_t *fat, uint16_t cluster) {
   uint32_t offset = cluster + (cluster / 2);
   uint16_t val = fat[offset] | (fat[offset + 1] << 8);
@@ -221,53 +286,6 @@ int32_t Storage::read_file(const char *filename_8_3, uint8_t *buf,
   }
   return -1;
 }
-
-// int32_t Storage::read_file(const char *filename_8_3, uint8_t *buf,
-//                            uint32_t maxLen) {
-//   uint32_t root_start = RESERVED_SECTORS + NUM_FATS * SECTORS_PER_FAT;
-//   uint8_t *root = (uint8_t *)(XIP_BASE + FS_OFFSET + root_start *
-//   BLOCK_SIZE); uint8_t *fat =
-//       (uint8_t *)(XIP_BASE + FS_OFFSET + RESERVED_SECTORS * BLOCK_SIZE);
-
-//   for (int e = 0; e < ROOT_ENTRIES; e++) {
-//     uint8_t *entry = root + e * 32;
-//     if (entry[0] == 0x00)
-//       break;
-//     if (entry[0] == 0xE5)
-//       continue;
-//     if (entry[11] & 0x08)
-//       continue;
-//     if (entry[11] & 0x10)
-//       continue;
-
-//     if (memcmp(entry, filename_8_3, 11) == 0) {
-//       uint16_t cluster = entry[26] | (entry[27] << 8);
-//       uint32_t size =
-//           entry[28] | (entry[29] << 8) | (entry[30] << 16) | (entry[31] <<
-//           24);
-
-//       uint32_t toRead = min(size, maxLen);
-//       uint32_t offset = 0;
-
-//       while (offset < toRead) {
-//         if (cluster < 2 || cluster >= 0xFF8)
-//           break;
-
-//         uint32_t sector = DATA_START + (cluster - 2) * SECTORS_PER_CLUS;
-//         uint8_t *src = (uint8_t *)(XIP_BASE + FS_OFFSET + sector *
-//         BLOCK_SIZE); uint32_t chunkSize =
-//             min((uint32_t)(SECTORS_PER_CLUS * BLOCK_SIZE), toRead - offset);
-//         memcpy(buf + offset, src, chunkSize);
-//         offset += chunkSize;
-
-//         cluster = fat12_entry(fat, cluster);
-//       }
-
-//       return size;
-//     }
-//   }
-//   return -1;
-// }
 
 void Storage::flash_write_block(uint32_t lba, const uint8_t *buf) {
   uint32_t flash_addr = FS_OFFSET + lba * BLOCK_SIZE;
@@ -537,6 +555,8 @@ void Storage::begin() {
   }
 
   format_ram_disk();
+  const char *msg = "This is where frequently changing configs will go";
+  write_ram_file("TEMPCFG JSN", (uint8_t *)msg, strlen(msg));
 
   usb_msc.setMaxLun(2);
   usb_msc.setID(0, "RaspberryPi", "Pico Flash", "1.0");
