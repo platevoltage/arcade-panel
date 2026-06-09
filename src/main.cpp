@@ -1,5 +1,6 @@
 #include "Gamepad.h"
 #include "Keyboard.h"
+#include "Lights.h"
 #include "SerialReader.h"
 #include "Storage.h"
 
@@ -25,6 +26,7 @@ void loop() {
 // NO USB STUFF ON CORE 1
 void setup1() {
   delay(5000);
+  lights.begin();
   //
 }
 void loop1() {
