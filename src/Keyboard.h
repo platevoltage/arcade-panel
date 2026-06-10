@@ -158,8 +158,8 @@ public:
 private:
   static const uint8_t desc_hid_report[];
   static void process_hid();
-  static uint8_t pins[];
-  static uint8_t pincount;
+  // static uint8_t pins[];
+  // static uint8_t pincount;
   static uint8_t hidcode[];
   static bool activeState;
 };

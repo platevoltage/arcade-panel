@@ -10,8 +10,8 @@ Adafruit_USBD_HID Keyboard::keyboard;
 
 uint8_t const Keyboard::desc_hid_report[] = {TUD_HID_REPORT_DESC_KEYBOARD()};
 
-uint8_t Keyboard::pins[] = {D0, D1, D2, D3};
-uint8_t Keyboard::pincount = sizeof(pins) / sizeof(pins[0]);
+// uint8_t Keyboard::pins[] = {D0, D1, D2, D3};
+// uint8_t Keyboard::pincount = sizeof(pins) / sizeof(pins[0]);
 uint8_t Keyboard::hidcode[] = {HID_KEY_0, HID_KEY_1, HID_KEY_2, HID_KEY_3};
 bool Keyboard::activeState = false;
 
@@ -23,17 +23,17 @@ void Keyboard::process_hid() {
   uint8_t keycode[6] = {0};
 
   // scan normal key and send report
-  for (uint8_t i = 0; i < pincount; i++) {
-    if (activeState == digitalRead(pins[i])) {
-      // if (activeState == digitalRead(pins[i])) {
-      // if pin is active (low), add its hid code to key report
-      keycode[count++] = hidcode[i];
+  // for (uint8_t i = 0; i < pincount; i++) {
+  //   if (activeState == digitalRead(pins[i])) {
+  //     // if (activeState == digitalRead(pins[i])) {
+  //     // if pin is active (low), add its hid code to key report
+  //     keycode[count++] = hidcode[i];
 
-      // 6 is max keycode per report
-      if (count == 6)
-        break;
-    }
-  }
+  //     // 6 is max keycode per report
+  //     if (count == 6)
+  //       break;
+  //   }
+  // }
 
   if (TinyUSBDevice.suspended() && count) {
     // Wake up host if we are in suspend mode
@@ -64,9 +64,9 @@ void Keyboard::process_hid() {
 }
 
 void Keyboard::begin() {
-  for (uint8_t i = 0; i < pincount; i++) {
-    pinMode(pins[i], activeState ? INPUT_PULLDOWN : INPUT_PULLUP);
-  }
+  // for (uint8_t i = 0; i < pincount; i++) {
+  //   pinMode(pins[i], activeState ? INPUT_PULLDOWN : INPUT_PULLUP);
+  // }
 
   if (!TinyUSBDevice.isInitialized()) {
     TinyUSBDevice.begin(0);
