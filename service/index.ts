@@ -7,4 +7,4 @@ const NUM_KEYS = 6;
 
 server.start();
 streamDeck.start(NUM_KEYS);
-sticks.start();
+// sticks.start();
