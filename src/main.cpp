@@ -1,10 +1,16 @@
 #include "Gamepad.h"
+// #include "HC4067.h"
 #include "Keyboard.h"
 #include "Lights.h"
 #include "SerialReader.h"
 #include "Storage.h"
 
 bool core1_separate_stack = true;
+
+// HC4067 mp(2, 3, 4, 5, 6); //  enable pin(8)
+
+// const int inputPin = 7;
+// uint16_t values;
 
 void setup() {
   Serial.begin(115200);
@@ -21,6 +27,14 @@ void setup() {
   delay(5000);
   Serial.print("Free stack: ");
   Serial.println(rp2040.getFreeStack());
+
+  // Serial.println();
+  // Serial.println(__FILE__);
+  // Serial.print("HC4067_LIB_VERSION: ");
+  // Serial.println(HC4067_LIB_VERSION);
+  // Serial.println();
+
+  // pinMode(inputPin, INPUT_PULLDOWN);
 }
 
 void loop() {
@@ -31,6 +45,19 @@ void loop() {
   Serial.println("hello world!");
   // Serial1.println("hello world11!");
   delay(1000);
+
+  // for (int ch = 0; ch < 16; ch++) {
+  //   mp.setChannel(ch);
+  //   delayMicroseconds(10); // give the mux time to settle
+  //   int val = digitalRead(inputPin);
+  //   Serial.print("CH");
+  //   Serial.print(ch);
+  //   Serial.print(": ");
+  //   Serial.println(val);
+  //   // mp.enable();
+  //   // Serial.println(mp.isEnabled()); // should print 1
+  // }
+  // Serial.println("---");
 }
 
 // NO USB STUFF ON CORE 1
