@@ -94,39 +94,50 @@ const actions: Function[/*page*/][/*key*/] = [
     ],
 ];
 
-
 let currentPage = 0;
 let pause = false;
 let loading = true;
 let deck: StreamDeck | null = null;
 
+const writeQueue: (() => Promise<void>)[] = [];
+let queueRunning = false;
+
+async function processQueue() {
+    if (queueRunning) return;
+    queueRunning = true;
+    while (writeQueue.length > 0) {
+        const write = writeQueue.shift()!;
+        await write();
+    }
+    queueRunning = false;
+}
+
+async function queueWrite(i: number, buffer: Buffer) {
+    return new Promise<void>((resolve) => {
+        writeQueue.push(async () => {
+            await deck!.fillKeyBuffer(i, buffer, { format: 'rgba' });
+            resolve();
+        });
+        processQueue();
+    });
+}
+
 export async function start(NUM_KEYS: number) {
     while (!deck) {
         try {
             deck = (await streamDeckSetup(onKeyPress)).deck;
-            // console.log(deck);
             deck.setBrightness(60);
         } catch (e) {
             console.error(e);
             await delay(5000);
         }
-
     }
-
     (async () => {
         while (loading)
             await loadingAnimation(deck);
     })();
-
-
-
-    // const frames: number[/*page*/][/*key*/] = [];
-    // const keys = new Array(NUM_KEYS).fill(0);
-    // images.forEach(() => frames.push([...keys]));
-
     const keys = new Array(NUM_KEYS).fill(0);
     const frames: number[/*page*/][/*key*/] = images.map(() => [...keys]);
-
     loading = false;
     await delay(4000);
     for (let i = 0; i < NUM_KEYS; i++) {
@@ -138,15 +149,11 @@ export async function start(NUM_KEYS: number) {
                 const page = currentPage;
                 let _images = images[page][i];
                 let index = frames[page][i];
-
                 if (_images && deck) {
                     try {
                         const _image = _images[index];
-                        await deck.fillKeyBuffer(i, _image.buffer, { format: 'rgba' });
-
-                        //Frame delay. If there is no delay property, delay defaults to 100 ms.
+                        await queueWrite(i, _image.buffer);
                         await delay((_image.delay || 10) * 10);
-
                     } catch (e) {
                         console.error(e);
                     }
@@ -162,6 +169,74 @@ export async function start(NUM_KEYS: number) {
         })();
     }
 }
+
+// let currentPage = 0;
+// let pause = false;
+// let loading = true;
+// let deck: StreamDeck | null = null;
+
+// export async function start(NUM_KEYS: number) {
+//     while (!deck) {
+//         try {
+//             deck = (await streamDeckSetup(onKeyPress)).deck;
+//             // console.log(deck);
+//             deck.setBrightness(60);
+//         } catch (e) {
+//             console.error(e);
+//             await delay(5000);
+//         }
+
+//     }
+
+//     (async () => {
+//         while (loading)
+//             await loadingAnimation(deck);
+//     })();
+
+
+
+//     // const frames: number[/*page*/][/*key*/] = [];
+//     // const keys = new Array(NUM_KEYS).fill(0);
+//     // images.forEach(() => frames.push([...keys]));
+
+//     const keys = new Array(NUM_KEYS).fill(0);
+//     const frames: number[/*page*/][/*key*/] = images.map(() => [...keys]);
+
+//     loading = false;
+//     await delay(4000);
+//     for (let i = 0; i < NUM_KEYS; i++) {
+//         (async () => {
+//             while (true) {
+//                 while (pause) {
+//                     await delay(100);
+//                 }
+//                 const page = currentPage;
+//                 let _images = images[page][i];
+//                 let index = frames[page][i];
+
+//                 if (_images && deck) {
+//                     try {
+//                         const _image = _images[index];
+//                         await deck.fillKeyBuffer(i, _image.buffer, { format: 'rgba' });
+
+//                         //Frame delay. If there is no delay property, delay defaults to 100 ms.
+//                         await delay((_image.delay || 10) * 10);
+
+//                     } catch (e) {
+//                         console.error(e);
+//                     }
+//                     if (index >= _images.length - 1) {
+//                         frames[page][i] = 0;
+//                     } else {
+//                         frames[page][i]++;
+//                     }
+//                 } else {
+//                     await delay(100);
+//                 }
+//             }
+//         })();
+//     }
+// }
 
 
 function onKeyPress(key: number) {
