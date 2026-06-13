@@ -1,5 +1,6 @@
 (sym_lib_table
-  (version 7)
-  (lib (name "MAX3421EETJ_T")(type "KiCad")(uri "${KIPRJMOD}/MAX3421EETJ_T/MAX3421EETJ_T.kicad_sym")(options "")(descr ""))
-  (lib (name "2024-07-15_06-15-41")(type "KiCad")(uri "${KIPRJMOD}/MAX3421EEHJ_T-2/KiCADv6/2024-07-15_06-15-41.kicad_sym")(options "")(descr ""))
+	(version 7)
+	(lib (name "MAX3421EETJ_T") (type "KiCad") (uri "${KIPRJMOD}/MAX3421EETJ_T/MAX3421EETJ_T.kicad_sym") (options "") (descr ""))
+	(lib (name "2024-07-15_06-15-41") (type "KiCad") (uri "${KIPRJMOD}/MAX3421EEHJ_T-2/KiCADv6/2024-07-15_06-15-41.kicad_sym") (options "") (descr ""))
+	(lib (name "CM5IO") (type "KiCad") (uri "${KIPRJMOD}/RP-007514-DD-2-rpi-cm5io Kicad/CM5IO.kicad_sym") (options "") (descr ""))
 )

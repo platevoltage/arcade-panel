@@ -4,6 +4,7 @@
 #include "Lights.h"
 #include "SerialReader.h"
 #include "Storage.h"
+#include <Adafruit_MLX90393.h>
 
 bool core1_separate_stack = true;
 
