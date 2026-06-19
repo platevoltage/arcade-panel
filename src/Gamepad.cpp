@@ -71,7 +71,7 @@ void Gamepad::task() {
 
   // // Hat/DPAD DOWN RIGHT
   // Serial.println("Hat/DPAD DOWN RIGHT");
-  gp.hat = 4; // GAMEPAD_HAT_DOWN_RIGHT;
+  // gp.hat = 4; // GAMEPAD_HAT_DOWN_RIGHT;
   // player1.sendReport(0, &gp, sizeof(gp));
   // player2.sendReport(0, &gp, sizeof(gp));
 

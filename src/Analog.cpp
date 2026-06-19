@@ -39,8 +39,8 @@ void Analog::task() {
   sensor.getEvent(&event);
   /* Display the results (magnetic field is measured in uTesla) */
 
-  int8_t x = event.magnetic.x / 512.0f;
-  int8_t y = event.magnetic.y / 512.0f;
+  int8_t x = event.magnetic.x / 455.0f;
+  int8_t y = event.magnetic.y / 455.0f;
   player1.gp.x = x;
   player1.gp.y = y;
 
