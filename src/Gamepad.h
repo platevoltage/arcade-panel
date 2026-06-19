@@ -2,7 +2,6 @@
 #define GAMEPAD_H
 
 #include "Adafruit_TinyUSB.h"
-#include "buttonState.h"
 
 class Gamepad {
 public:
