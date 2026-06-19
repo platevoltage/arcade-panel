@@ -2,6 +2,7 @@
 #define GAMEPAD_H
 
 #include "Adafruit_TinyUSB.h"
+#include "buttonState.h"
 
 class Gamepad {
 public:
@@ -15,6 +16,7 @@ public:
   void begin();
   void task();
   Adafruit_USBD_HID player;
+  hid_gamepad_report_t gp;
   // static Adafruit_USBD_HID player1;
   // static Adafruit_USBD_HID player2;
 

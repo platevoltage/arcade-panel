@@ -1,6 +1,7 @@
 #ifndef ANALOG_H
 #define ANALOG_H
 
+#include "Gamepad.h"
 #include <Adafruit_MLX90393.h>
 
 class Analog {

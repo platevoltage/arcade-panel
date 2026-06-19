@@ -12,7 +12,7 @@ Gamepad::~Gamepad() {}
 Gamepad player1;
 Gamepad player2;
 
-hid_gamepad_report_t gp;
+// hid_gamepad_report_t Gamepad::gp;
 // hid_gamepad_report_t gp2;
 
 uint8_t const Gamepad::desc_hid_report[] = {TUD_HID_REPORT_DESC_GAMEPAD()};
@@ -39,15 +39,16 @@ void Gamepad::task() {
     return;
   // Serial.println("Gamepad task");
   // Serial.println("No pressing buttons");
-  // gp.x = 0;
-  // gp.y = 0;
+  // gp.x = analogX;
+  // gp.y = analogY;
   // gp.z = 0;
   // gp.rz = 0;
   // gp.rx = 0;
   // gp.ry = 0;
   // gp.hat = 0;
   // gp.buttons = 0;
-  // player1.sendReport(0, &gp, sizeof(gp));
+  player.sendReport(0, &gp, sizeof(gp));
+  delay(20);
   // player2.sendReport(0, &gp, sizeof(gp));
 
   // // Hat/DPAD UP
@@ -70,7 +71,7 @@ void Gamepad::task() {
 
   // // Hat/DPAD DOWN RIGHT
   // Serial.println("Hat/DPAD DOWN RIGHT");
-  // gp.hat = 4; // GAMEPAD_HAT_DOWN_RIGHT;
+  gp.hat = 4; // GAMEPAD_HAT_DOWN_RIGHT;
   // player1.sendReport(0, &gp, sizeof(gp));
   // player2.sendReport(0, &gp, sizeof(gp));
 

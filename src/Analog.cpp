@@ -20,62 +20,42 @@ void Analog::begin() {
 
   Serial.println("Found a MLX90393 sensor");
 
-  sensor.setGain(MLX90393_GAIN_1X);
-  // You can check the gain too
-  Serial.print("Gain set to: ");
-  switch (sensor.getGain()) {
-  case MLX90393_GAIN_1X:
-    Serial.println("1 x");
-    break;
-  case MLX90393_GAIN_1_33X:
-    Serial.println("1.33 x");
-    break;
-  case MLX90393_GAIN_1_67X:
-    Serial.println("1.67 x");
-    break;
-  case MLX90393_GAIN_2X:
-    Serial.println("2 x");
-    break;
-  case MLX90393_GAIN_2_5X:
-    Serial.println("2.5 x");
-    break;
-  case MLX90393_GAIN_3X:
-    Serial.println("3 x");
-    break;
-  case MLX90393_GAIN_4X:
-    Serial.println("4 x");
-    break;
-  case MLX90393_GAIN_5X:
-    Serial.println("5 x");
-    break;
-  }
+  sensor.setGain(MLX90393_GAIN_5X);
 
   // Set resolution, per axis. Aim for sensitivity of ~0.3 for all axes.
-  sensor.setResolution(MLX90393_X, MLX90393_RES_17);
-  sensor.setResolution(MLX90393_Y, MLX90393_RES_17);
-  sensor.setResolution(MLX90393_Z, MLX90393_RES_16);
+  sensor.setResolution(MLX90393_X, MLX90393_RES_19);
+  sensor.setResolution(MLX90393_Y, MLX90393_RES_19);
+  sensor.setResolution(MLX90393_Z, MLX90393_RES_19);
 
   // Set oversampling
   sensor.setOversampling(MLX90393_OSR_3);
 
   // Set digital filtering
-  sensor.setFilter(MLX90393_FILTER_5);
+  sensor.setFilter(MLX90393_FILTER_0);
 };
 void Analog::task() {
-  float x, y, z;
 
-  // get X Y and Z data at once
-  if (sensor.readData(&x, &y, &z)) {
-    Serial.print("X: ");
-    Serial.print(x, 4);
-    Serial.println(" uT");
-    Serial.print("Y: ");
-    Serial.print(y, 4);
-    Serial.println(" uT");
-    Serial.print("Z: ");
-    Serial.print(z, 4);
-    Serial.println(" uT");
+  sensors_event_t event;
+  sensor.getEvent(&event);
+  /* Display the results (magnetic field is measured in uTesla) */
+
+  int8_t x = event.magnetic.x / 512.0f;
+  int8_t y = event.magnetic.y / 512.0f;
+  player1.gp.x = x;
+  player1.gp.y = y;
+
+  if (x > 100) {
+    player1.gp.hat = GAMEPAD_HAT_RIGHT;
   } else {
-    Serial.println("Unable to read XYZ data from the sensor.");
+    player1.gp.hat = GAMEPAD_HAT_CENTERED;
   }
+
+  if (abs(event.magnetic.x) > 5000 || abs(event.magnetic.y) > 5000) {
+    Serial.print("X: ");
+    Serial.print(x);
+    Serial.print(" \tY: ");
+    Serial.println(y);
+  }
+  // Serial.print(" \tZ: ");
+  // Serial.print(event.magnetic.z);
 };
