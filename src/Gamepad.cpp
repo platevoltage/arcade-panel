@@ -48,7 +48,7 @@ void Gamepad::task() {
   // gp.hat = 0;
   // gp.buttons = 0;
   player.sendReport(0, &gp, sizeof(gp));
-  delay(20);
+  delay(2);
   // player2.sendReport(0, &gp, sizeof(gp));
 
   // // Hat/DPAD UP
