@@ -16,5 +16,6 @@
     "ostream": "cpp",
     "iomanip": "cpp",
     "sstream": "cpp"
-  }
+  },
+  "cmake.sourceDirectory": "/Users/garrett/Junk/arcade-panel/lib/Adafruit_BusIO"
 }

@@ -1,6 +1,6 @@
 
 $fn = 100; 
-color(c = "#440000")  rotate([180, 0, 270]) translate([-40, -20, -1.5]) import("main-board.stl");
+// color(c = "#440000")  rotate([180, 0, 270]) translate([-40, -20, -1.5]) import("main-board.stl");
 
 // difference() {
 //     color(c = "#440000")  rotate([180, 0, 270]) translate([-40, -20, -1.5]) import("main-board.stl");
@@ -8,7 +8,7 @@ color(c = "#440000")  rotate([180, 0, 270]) translate([-40, -20, -1.5]) import("
 // }
 
 
-color(c = "#004400")  rotate([90, 0, 270]) translate([-137.5, 50, -33.5]) import("io-board.stl");
+// color(c = "#004400")  rotate([90, 0, 270]) translate([-137.5, 50, -33.5]) import("io-board.stl");
 
 // color(c = "#ffff4444")  rotate([180, 0, 0]) translate([-110, -110, 13]) import("base.stl");
 
@@ -19,7 +19,7 @@ difference() {
 
         // for (r = [0, 180])
         //     rotate([0, 0, r]) translate([25, -12.5, -12]) linear_extrude(height = 8) square([8, 6]);
-        translate([0, 0, -8]) linear_extrude(height = 9) square([64, 76], center=true);
+        translate([0, 0, -8]) linear_extrude(height = 8) square([64, 76], center=true);
         for (r = [0, 180])
             rotate([0, 0, r]) translate([0, 35, -39]) linear_extrude(height = 39) square([64, 6], center=true);
         for (r = [0, 180])
@@ -57,8 +57,8 @@ difference() {
         rotate([0, 0, 0]) translate([-27.5, 35.5, -5]) linear_extrude(height = 6) circle(d = 2.6);
         rotate([0, 0, 0]) translate([-27.5, -35.5, -5]) linear_extrude(height = 6) circle(d = 2.6);
 
-        rotate([0, 90, 0]) translate([39.5, 35.5, 27]) linear_extrude(height = 6) circle(d = 1.8);
-        rotate([0, 90, 0]) translate([39.5, -35.5, 27]) linear_extrude(height = 6) circle(d = 1.8);
+        rotate([0, 90, 0]) translate([36.5, 35.5, 27]) linear_extrude(height = 6) circle(d = 1.8);
+        rotate([0, 90, 0]) translate([36.5, -35.5, 27]) linear_extrude(height = 6) circle(d = 1.8);
         rotate([0, 90, 0]) translate([2.5, 35.5, 27]) linear_extrude(height = 6) circle(d = 1.8);
         rotate([0, 90, 0]) translate([2.5, -35.5, 27]) linear_extrude(height = 6) circle(d = 1.8);
 

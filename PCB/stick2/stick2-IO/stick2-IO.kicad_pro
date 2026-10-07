@@ -100,14 +100,6 @@
         [
           "courtyards_overlap|163262726|55425000|18ad18ae-2a16-46ff-80cc-c1d3987160dc|716816dc-91aa-4b54-8c57-3be94358fa8c",
           ""
-        ],
-        [
-          "starved_thermal|110120000|87000000|ba1f0064-4a0b-4311-aca4-d2102f616c3c|ccaf329d-ec7d-4c7f-af80-6edd1a55061f|F.Cu",
-          ""
-        ],
-        [
-          "starved_thermal|156601301|53500000|ba1f0064-4a0b-4311-aca4-d2102f616c3c|1450190e-014a-4c7d-8ec4-e64e1c2fcd06|F.Cu",
-          ""
         ]
       ],
       "meta": {

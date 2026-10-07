@@ -10558,16 +10558,6 @@
 	)
 	(wire
 		(pts
-			(xy 124.46 -109.22) (xy 109.22 -109.22)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "28e4a9d9-4952-4d49-8cbd-ec9fad1bf2fb")
-	)
-	(wire
-		(pts
 			(xy 193.04 -111.76) (xy 215.9 -111.76)
 		)
 		(stroke
@@ -10848,6 +10838,16 @@
 	)
 	(wire
 		(pts
+			(xy 105.41 -106.68) (xy 124.46 -106.68)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3f30d9ca-677e-4716-9b0b-28852f49ad5e")
+	)
+	(wire
+		(pts
 			(xy 39.37 -137.16) (xy 39.37 -134.62)
 		)
 		(stroke
@@ -10905,6 +10905,16 @@
 			(type default)
 		)
 		(uuid "42a6b22d-ab39-4c1c-9e8b-fc040ad23932")
+	)
+	(wire
+		(pts
+			(xy 294.64 -27.94) (xy 330.2 -27.94)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "437fc0fa-3d08-4512-9e53-77b4606c00f8")
 	)
 	(wire
 		(pts
@@ -11188,16 +11198,6 @@
 	)
 	(wire
 		(pts
-			(xy 124.46 -106.68) (xy 109.22 -106.68)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5ec93c42-77e4-495b-accc-26bf90c45d8b")
-	)
-	(wire
-		(pts
 			(xy 151.13 -87.63) (xy 151.13 -55.88)
 		)
 		(stroke
@@ -11205,6 +11205,16 @@
 			(type default)
 		)
 		(uuid "61a50525-c25e-452e-b8b4-ad5953ad46ae")
+	)
+	(wire
+		(pts
+			(xy 294.64 -15.24) (xy 308.61 -15.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "61f537c4-bfa7-4569-9604-8e57443f460c")
 	)
 	(wire
 		(pts
@@ -11245,6 +11255,16 @@
 			(type default)
 		)
 		(uuid "66d14bc0-8e5f-46f9-a9a4-d61be7750292")
+	)
+	(wire
+		(pts
+			(xy 105.41 -109.22) (xy 124.46 -109.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "670f8b8d-6129-4de3-8613-d6ebdce65cd9")
 	)
 	(wire
 		(pts
@@ -11478,6 +11498,16 @@
 	)
 	(wire
 		(pts
+			(xy 294.64 -22.86) (xy 322.58 -22.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "788d86eb-c5b9-437e-8219-547be0fbd961")
+	)
+	(wire
+		(pts
 			(xy 64.77 104.14) (xy 71.12 104.14)
 		)
 		(stroke
@@ -11618,6 +11648,16 @@
 	)
 	(wire
 		(pts
+			(xy 294.64 -17.78) (xy 309.88 -17.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "93731a37-9887-46ad-8d98-d7a5eb56d24d")
+	)
+	(wire
+		(pts
 			(xy 162.56 -207.01) (xy 162.56 -151.13)
 		)
 		(stroke
@@ -11735,6 +11775,16 @@
 			(type default)
 		)
 		(uuid "9e9672ee-afd7-4c96-bbb5-9de668f6cd84")
+	)
+	(wire
+		(pts
+			(xy 294.64 -25.4) (xy 326.39 -25.4)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a232795f-851d-4287-aea2-d7ba58cbbb74")
 	)
 	(wire
 		(pts
@@ -12778,6 +12828,16 @@
 	)
 	(wire
 		(pts
+			(xy 294.64 -20.32) (xy 311.15 -20.32)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f6c0c018-8ce2-466c-ad00-7b832ecd34b7")
+	)
+	(wire
+		(pts
 			(xy 154.94 -228.6) (xy 154.94 -226.06)
 		)
 		(stroke
@@ -13166,6 +13226,16 @@
 		)
 		(uuid "4e0f837b-733b-449c-8de1-1ecd92ef2e5b")
 	)
+	(label "SDA1"
+		(at 105.41 -109.22 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "4e6d374e-5bf3-49ea-8b5f-ebabd05c473d")
+	)
 	(label "XIN"
 		(at 97.79 -63.5 180)
 		(effects
@@ -13266,6 +13336,16 @@
 		)
 		(uuid "7188b7b3-9feb-47cc-ae52-5ff6e122eeed")
 	)
+	(label "SDA1"
+		(at 308.61 -15.24 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "71e49fc1-7624-499f-8c95-d810875403e2")
+	)
 	(label "GPIO25"
 		(at 208.28 -116.84 180)
 		(effects
@@ -13325,6 +13405,16 @@
 			(justify right bottom)
 		)
 		(uuid "829fdc1c-eedf-4a4d-b567-943da8f8aa2b")
+	)
+	(label "GPIO10"
+		(at 311.15 -20.32 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "853724d9-93c9-4a82-ad9f-c7e720a1a57b")
 	)
 	(label "GPIO21"
 		(at 208.28 -106.68 180)
@@ -13465,6 +13555,16 @@
 			(justify left bottom)
 		)
 		(uuid "afcb55b9-3aef-472e-baf8-4c91f8165956")
+	)
+	(label "SCL1"
+		(at 105.41 -106.68 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "b102cba9-99aa-4ca8-a41c-ad7004083500")
 	)
 	(label "SWD"
 		(at 163.83 -72.39 90)
@@ -13805,6 +13905,16 @@
 			(justify right bottom)
 		)
 		(uuid "fd42ef00-a9e1-4391-8090-8fda1776722f")
+	)
+	(label "SCL1"
+		(at 309.88 -17.78 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "fe3f6fd9-5c69-4dbe-9dda-d288027322a9")
 	)
 	(symbol
 		(lib_id "RPI - Power:GND")
@@ -14244,6 +14354,84 @@
 			(project "stick2"
 				(path "/696e3733-e2f9-4ce7-8666-a000a78202dd"
 					(reference "C26")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "RPI - Power:GND")
+		(at 330.2 -27.94 0)
+		(mirror y)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "085a2949-90a5-471c-bb32-fea3707a8560")
+		(property "Reference" "#PWR031"
+			(at 330.2 -21.59 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 330.2 -24.003 0)
+			(show_name no)
+			(do_not_autoplace yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 330.2 -27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 330.2 -27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 330.2 -27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "b3532cda-eadd-413c-aabf-d8aa85ee68c3")
+		)
+		(instances
+			(project "stick2"
+				(path "/696e3733-e2f9-4ce7-8666-a000a78202dd"
+					(reference "#PWR031")
 					(unit 1)
 				)
 			)
@@ -23019,6 +23207,84 @@
 		)
 	)
 	(symbol
+		(lib_id "RPI - Power:PWR_NET")
+		(at 322.58 -22.86 0)
+		(mirror x)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "971686ad-c4e6-47dc-be5e-b378cd458c14")
+		(property "Reference" "#PWR045"
+			(at 322.58 -26.67 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 322.58 -19.05 0)
+			(show_name no)
+			(do_not_autoplace yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 322.58 -22.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 322.58 -22.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 322.58 -22.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "c8a83434-a06b-4089-92d8-d81cc56dc4fb")
+		)
+		(instances
+			(project "stick2"
+				(path "/696e3733-e2f9-4ce7-8666-a000a78202dd"
+					(reference "#PWR045")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 74.93 91.44 90)
 		(unit 1)
@@ -28735,6 +29001,83 @@
 			(project "stick2"
 				(path "/696e3733-e2f9-4ce7-8666-a000a78202dd"
 					(reference "C21")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "RPI - Power:PWR_NET")
+		(at 326.39 -25.4 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f8dbacce-07ed-42e5-b77c-6e91d46dffb4")
+		(property "Reference" "#PWR032"
+			(at 326.39 -29.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "VBUS"
+			(at 326.644 -21.59 0)
+			(show_name no)
+			(do_not_autoplace yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 326.39 -25.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 326.39 -25.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 326.39 -25.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "bd537d47-2789-4663-b31b-63fcd50a1f54")
+		)
+		(instances
+			(project "stick2"
+				(path "/696e3733-e2f9-4ce7-8666-a000a78202dd"
+					(reference "#PWR032")
 					(unit 1)
 				)
 			)
