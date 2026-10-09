@@ -8,7 +8,7 @@ $fn = 100;
 // }
 
 
-// color(c = "#004400")  rotate([90, 0, 270]) translate([-137.5, 50, -33.5]) import("io-board.stl");
+color(c = "#004400")  rotate([90, 0, 270]) translate([-137.5, 50, -33.5]) import("io-board.stl");
 
 // color(c = "#ffff4444")  rotate([180, 0, 0]) translate([-110, -110, 13]) import("base.stl");
 
