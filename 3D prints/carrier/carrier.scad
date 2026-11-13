@@ -5,7 +5,7 @@ module right_triangle(a = 10, b = 10) {
 }
 
 
-color(c = "#440000")  rotate([180, 0, 270]) translate([-40, -20, -1.5]) import("main-board.stl");
+// color(c = "#440000")  rotate([180, 0, 270]) translate([-40, -20, -1.5]) import("main-board.stl");
 // color(c = "#004400")  rotate([90, 0, 270]) translate([-137.5, 51.5, -33.5]) import("io-board.stl");
 
 // color(c = "#ffff4444")  rotate([180, 0, 0]) translate([-110, -110, 13]) import("base.stl");
